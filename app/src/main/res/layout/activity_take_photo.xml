@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:orientation="vertical"
+    android:weightSum="10"
+
+    tools:context="eu.meuwe.app.meuwealfa.TakePhoto">
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="9"
+        android:contentDescription="@string/CameraWindow" />
+
+    <Button
+        android:layout_weight="1"
+        android:id="@+id/buttonTakePhoto"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/pomarancz"
+        android:textColor="@color/common_google_signin_btn_text_dark"
+        />
+
+// taken from camera_preview
+    <SurfaceView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/surfaceView"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="logout"
+        android:id="@+id/logout"
+
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="@dimen/camera_click"
+        android:id="@+id/capture"
+
+        app:srcCompat="@drawable/logoredsmall" />
+//down to here camera_preview
+
+
+</LinearLayout>

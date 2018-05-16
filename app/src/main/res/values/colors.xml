@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#8b000c59</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="zielonkawy">#7e2ae5c6</color>
+    <color name="pomarancz">#7a890bff</color>
+    <color name="zielonymeuwe">#62f9c6</color>
+    <color name="granatmeuwe">#101333</color>
+</resources>

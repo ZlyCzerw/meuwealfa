@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "24257363641",
+    "firebase_url": "https://meuwealfa.firebaseio.com",
+    "project_id": "meuwealfa",
+    "storage_bucket": "meuwealfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:24257363641:android:bc4c981e03e401d1",
+        "android_client_info": {
+          "package_name": "eu.meuwe.app.meuwealfa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "24257363641-p854puqfu21kvqmavakgobmcejqvm68d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "eu.meuwe.app.meuwealfa",
+            "certificate_hash": "fa2912809fbed6a83078de2c0f6b8aa3458b0797"
+          }
+        },
+        {
+          "client_id": "24257363641-bg26qkg05k38fl9pslrjt077pau42702.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUz8Wn9eBeCfLn6jiPuV-oo2O2zFok15o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "24257363641-bg26qkg05k38fl9pslrjt077pau42702.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
