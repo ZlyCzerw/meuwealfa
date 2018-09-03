@@ -37,7 +37,7 @@ public class DisplayMueweActivity extends AppCompatActivity {
     }*/
     public void goBackHome(View home) {
         // Do something in response to button
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, MapsActivity.class);
+        //startActivity(intent);
     }
 }

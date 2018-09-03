@@ -1,144 +1,154 @@
 package eu.meuwe.app.meuwealfa;
 
+import android.Manifest;
 import android.content.Intent;
-import android.view.WindowManager;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, OnMarkerClickListener {
+
+public class MapsActivity extends FragmentActivity
+        implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMapLongClickListener {
 
     private GoogleMap mMap;
-    private GPSTracker gpsTracker;
-    private Location mLocation;
-    double latitude, longitude;
-    private Marker myMarker;
-    private Marker fakeMarker;
-    private Marker fakeMarker2;
-    private Marker fakeMarker3;
-    private Marker fakeMarker4;
 
+    private static final int PERMISSION_ACCESS_COARSE_LOCATION =10;
+    private static final int DEFAULT_ZOOM =15;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private LocationRequest mLocationRequest;
+    private Location mLastLocation;
+    private LocationCallback mLocationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_maps);
-
-
-
-        gpsTracker = new GPSTracker(getApplicationContext());// Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        mLocation = gpsTracker.getLocation();
-
-        latitude = mLocation.getLatitude();
-        longitude = mLocation.getLongitude();
-
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
 
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
     @Override
-
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker and move the camera
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                mLastLocation = locationResult.getLastLocation();
+            }
+        };
 
-        LatLng myPosition = new LatLng(latitude,longitude);
-        myMarker = mMap.addMarker(new MarkerOptions().position(myPosition)
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.logoredsmall))
-                .title("meuwe")
-                .anchor(0.5f,0.5f));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 16));
-        myMarker.setTag(0);
-        mMap.setOnMarkerClickListener(this);
-       // mMap.getMinZoomLevel(); //Not yet running. Movable field of view has to be limited to 1km.
-        mMap.getUiSettings().setScrollGesturesEnabled(false); // disables scrolling
-       // mMap.getUiSettings().setZoomGesturesEnabled(false); // disables zooming in and out
-        mMap.setMaxZoomPreference(17f);
-        mMap.setMinZoomPreference(15f);
-        MapStyleOptions styleOptions=MapStyleOptions.loadRawResourceStyle(this, R.raw.maps_style_meuwe1);
-        mMap.setMapStyle(styleOptions);
-        fakeMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(50.031689, 22.006073))
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconhuman1))
-                .title("Longboard")
-                .anchor(0.5f,0.5f));
-        fakeMarker2 = mMap.addMarker(new MarkerOptions().position(new LatLng(50.031552, 22.009977))
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconhuman2))
-                .title("Spacer z psem")
-                .anchor(0.5f,0.5f));
-        fakeMarker3 = mMap.addMarker(new MarkerOptions().position(new LatLng(50.032579, 22.012347))
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconhuman3))
-                .title("Piwo")
-                .anchor(0.5f,0.5f));
-        fakeMarker4 = mMap.addMarker(new MarkerOptions().position(new LatLng(50.030085, 22.008550))
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconhuman4))
-                .title("Pomoc w domu")
-                .anchor(0.5f,0.5f));
+        mMap.setOnMapLongClickListener(this);
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(3000); // two minute interval
+        mLocationRequest.setFastestInterval(3000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+
+        // Add a marker in Sydney and move the camera
+        final LatLng sydney = new LatLng(-34, 151);
+
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        //Add My Location Pointer on the map
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);   //add the MyLocationButton on the map
+            mMap.setOnMyLocationButtonClickListener(this); //add event on My Location Button click
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null); //send location request to system, and register Callback
+        }
+        else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},PERMISSION_ACCESS_COARSE_LOCATION);
+        }
+
+        UpdateLocation();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);   //add the MyLocationButton on the map
+            mMap.setOnMyLocationButtonClickListener(this); //add event on My Location Button click
+        }
+    }
+
+    private void UpdateLocation()
+    {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location!=null) {
+                        mLastLocation = location;
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                new LatLng(mLastLocation.getLatitude(),
+                                mLastLocation.getLongitude()), DEFAULT_ZOOM));
+                        //mMap.addMarker(new MarkerOptions().position(
+                        //        new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude())));
+                    }
+                }
+            });
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},PERMISSION_ACCESS_COARSE_LOCATION);
+        }
     }
 
 
     @Override
-
-    public boolean onMarkerClick(final Marker marker) {
-
-        // Retrieve the data from the marker.
-        //Integer clickCount = (Integer) myMarker.getTag(); // To be used later, when i want to add activity upon every next click.
-
-        if (marker.equals(myMarker))
-        {
-            Intent intent =new Intent(MapsActivity.this, CameraPreview.class);
-            startActivity(intent);
-        }
-        if (marker.equals(fakeMarker))
-        {
-            Intent intent2 =new Intent(MapsActivity.this, AniaIconActivity.class );
-            startActivity(intent2);
-        }
-        /*
-        // Check if a click count was set, then display the click count.
-        if (clickCount != null) {
-            clickCount = clickCount + 1;
-            myMarker.setTag(clickCount);
-            Toast.makeText(this,
-                    myMarker.getTitle() +
-                            " has been clicked " + clickCount + " times.",
-                    Toast.LENGTH_SHORT).show(); //Toast is a popup grey field
-        }
-
-        // Return false to indicate that we have not consumed the event and that we wish
-        // for the default behavior to occur (which is for the camera to move such that the
-        // marker is centered and for the marker's info window to open, if it has one).
-        return false;
-         */
+    public boolean onMyLocationButtonClick() {
+       UpdateLocation();
         return false;
     }
 
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishActivity(1);
+    }
 
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        UpdateLocation();
+        Intent mMeuweActivity = new Intent(MapsActivity.this, MeuweActivity.class);
+        mMeuweActivity.putExtra("Latitude",mLastLocation.getLatitude());
+        mMeuweActivity.putExtra("Longitude",mLastLocation.getLongitude());
+        startActivity(mMeuweActivity);
+    }
 }

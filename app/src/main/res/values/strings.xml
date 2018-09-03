@@ -113,4 +113,7 @@
     <string name="czat7">NewUser987: siema! mogę czekać pod Twoim blokiem o 17 ;)</string>
     <string name="CameraWindow">camera</string>
     <string name="Take_Fake_Photo">-</string>
+    <string name="AddPhotoHint">Tap to add photo</string>
+    <string name="PostIt">Post It!</string>
+    <string name="ErrNoAppToMakePhotos">No App to make Photos</string>
 </resources>

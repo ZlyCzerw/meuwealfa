@@ -6,49 +6,67 @@
     android:layout_height="match_parent"
 
     tools:context="eu.meuwe.app.meuwealfa.MeuweActivity">
+
     <ImageView
         android:id="@+id/imageTaken"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:layout_marginBottom="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_width="379dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/Photo_Description"
+        android:onClick="onClickImageTaken"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/editText"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/post"
         android:layout_width="0dp"
-        android:layout_height="107dp"
+        android:layout_height="56dp"
         android:background="@color/common_google_signin_btn_text_dark_disabled"
-        android:onClick="sendMessage"
         android:hint="post it"
+        android:onClick="sendMessage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="@string/PostIt" />
 
     <EditText
         android:id="@+id/editText"
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="0dp"
-        android:layout_height="109dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="56dp"
         android:background="@color/common_google_signin_btn_text_dark_disabled"
         android:ems="10"
         android:fontFamily="sans-serif"
         android:hint="@string/Enter_text_box"
         android:inputType="textMultiLine"
-        android:textAlignment="viewStart"
+        android:onClick="onClickImageTaken"
+        android:textAlignment="center"
         android:textColor="@android:color/background_light"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/post"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageHintTextView"
         tools:text="@string/Description" />
+
+    <TextView
+        android:id="@+id/imageHintTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="108dp"
+        android:layout_marginTop="102dp"
+        android:text="Tap to add photo!"
+        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/AddPhotoHint" />
 
 </android.support.constraint.ConstraintLayout>
