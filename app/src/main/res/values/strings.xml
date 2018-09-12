@@ -100,7 +100,7 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-    <string name="Enter_text_box">here you write about activity you want to share</string>
+    <string name="Enter_text_box">Here write about your activity!</string>
     <string name="goback_button">back to map</string>
     <string name="Comment_bar_fake">56 views,           7 comments</string>
     <string name="Button_Publish">Publish!</string>
@@ -116,4 +116,5 @@
     <string name="AddPhotoHint">Tap to add photo</string>
     <string name="PostIt">Post It!</string>
     <string name="ErrNoAppToMakePhotos">No App to make Photos</string>
+    <string name="PostItHint">Post It!</string>
 </resources>

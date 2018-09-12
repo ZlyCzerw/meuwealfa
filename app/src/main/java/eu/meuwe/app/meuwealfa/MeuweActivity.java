@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Camera;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -34,8 +36,13 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MeuweActivity extends AppCompatActivity {
@@ -48,11 +55,12 @@ public class MeuweActivity extends AppCompatActivity {
     private Button mPostIt;
     private ImageView mImageTaken;
     private EditText mEnterText;
-
+    private double Latitude,Longitude;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-
+    private FirebaseFirestore mFirestore;
+    private FirebaseStorage mFirebaseStorage;
     //request codes
     private final int REQUEST_IMAGE_CAPTURE = 101;
     private final int PERMISSION_CAMERA =102;
@@ -84,13 +92,19 @@ public class MeuweActivity extends AppCompatActivity {
         //Get user
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mFirebaseStorage = FirebaseStorage.getInstance();
         //Get access to Firestore
-        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
 
         //Get UI references
         mPostIt =  findViewById(R.id.post);
         mEnterText = findViewById(R.id.editText);
         mImageTaken = findViewById(R.id.imageTaken);
+
+        //Get extras from previous activity
+        Intent intent = getIntent();
+        Latitude=intent.getDoubleExtra("Latitude",0);
+        Longitude=intent.getDoubleExtra("Longitude",0);
 
 
 
@@ -182,11 +196,62 @@ public class MeuweActivity extends AppCompatActivity {
      */
     public void sendMessage(View view) {
 
-        Intent intent = new Intent(this, DisplayMueweActivity.class);
+        /*Intent intent = new Intent(this, DisplayMueweActivity.class);
         EditText editText = (EditText) findViewById(R.id.editText);
         String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+        startActivity(intent);*/
+
+
+        //Add all the data to firestore
+        //Get current date
+        SimpleDateFormat simpleDateFormat;
+        simpleDateFormat = new SimpleDateFormat("yy/MM/dd;HH:mm:ss");
+        //Upload img to firebase storage
+        StorageReference mStorageReference = mFirebaseStorage.getReference();
+        UUID ImageUUID = UUID.randomUUID(); // generate unique ID for image
+        String ImageName = "Images/"+ImageUUID.toString()+".png";
+        //Convert Bitmap to Byte Stream
+        ByteArrayOutputStream baos= new ByteArrayOutputStream();
+        Bitmap bm=((BitmapDrawable)mImageTaken.getDrawable()).getBitmap();
+        bm.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte[] data = baos.toByteArray();
+        //Upload Image to Firebase Storage
+        UploadTask uploadTask = mStorageReference.child(ImageName).putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MeuweActivity.this, e.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Map <String,Object> post = new HashMap<>();
+        // All the data definition is below
+        post.put("user",mFirebaseUser.getUid());
+        post.put("time", simpleDateFormat.format(GregorianCalendar.getInstance().getTime()));
+        post.put("latitude",Latitude);
+        post.put("longitude",Longitude);
+        post.put("text",mEnterText.getText().toString());
+        post.put("imageUrl",mStorageReference.child(ImageName).getPath());
+
+        //Create document
+        mFirestore.collection("posts")
+                .add(post)
+                .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MeuweActivity.this, e.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                //Show created activity
+                Intent mDisplayMeuweActivity = new Intent(MeuweActivity.this, DisplayMueweActivity.class);
+                mDisplayMeuweActivity.putExtra("DocRef",documentReference.getId());
+                startActivity(mDisplayMeuweActivity);
+            }
+        });
+
     }
     //Start Camera App and expect to get image
     public void onClickImageTaken (View view)
@@ -208,7 +273,7 @@ public class MeuweActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();,
+            Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mImageTaken.setImageBitmap(imageBitmap);
         }
