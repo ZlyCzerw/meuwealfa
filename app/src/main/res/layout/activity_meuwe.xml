@@ -10,15 +10,16 @@
 
     <ImageView
         android:id="@+id/imageTaken"
-        android:layout_width="379dp"
-        android:layout_height="228dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/Photo_Description"
         android:onClick="onClickImageTaken"
-        android:scaleType="fitXY"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/editText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/logored" />
 
     <Button
         android:id="@+id/post"

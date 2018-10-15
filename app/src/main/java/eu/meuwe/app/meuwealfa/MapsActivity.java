@@ -147,8 +147,8 @@ public class MapsActivity extends FragmentActivity
     public void onMapLongClick(LatLng latLng) {
         UpdateLocation();
         Intent mMeuweActivity = new Intent(MapsActivity.this, MeuweActivity.class);
-        mMeuweActivity.putExtra("Latitude",mLastLocation.getLatitude());
-        mMeuweActivity.putExtra("Longitude",mLastLocation.getLongitude());
+        mMeuweActivity.putExtra("Latitude",latLng.latitude);
+        mMeuweActivity.putExtra("Longitude",latLng.longitude);
         startActivity(mMeuweActivity);
     }
 }

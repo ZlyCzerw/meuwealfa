@@ -209,8 +209,8 @@ public class MeuweActivity extends AppCompatActivity {
         simpleDateFormat = new SimpleDateFormat("yy/MM/dd;HH:mm:ss");
         //Upload img to firebase storage
         StorageReference mStorageReference = mFirebaseStorage.getReference();
-        UUID ImageUUID = UUID.randomUUID(); // generate unique ID for image
-        String ImageName = "Images/"+ImageUUID.toString()+".png";
+        final UUID EventUUID = UUID.randomUUID(); // generate unique ID for image
+        String ImageName = "Images/"+EventUUID.toString()+".png";
         //Convert Bitmap to Byte Stream
         ByteArrayOutputStream baos= new ByteArrayOutputStream();
         Bitmap bm=((BitmapDrawable)mImageTaken.getDrawable()).getBitmap();
@@ -225,29 +225,36 @@ public class MeuweActivity extends AppCompatActivity {
             }
         });
 
-        Map <String,Object> post = new HashMap<>();
+        Post mPost = new Post(
+                mFirebaseUser.getUid(),
+                Latitude,
+                Longitude,
+                mEnterText.getText().toString(),
+                mStorageReference.child(ImageName).getPath());
+
+        //Map <String,Object> post = new HashMap<>();
         // All the data definition is below
-        post.put("user",mFirebaseUser.getUid());
+        /*post.put("user",mFirebaseUser.getUid());
         post.put("time", simpleDateFormat.format(GregorianCalendar.getInstance().getTime()));
         post.put("latitude",Latitude);
         post.put("longitude",Longitude);
         post.put("text",mEnterText.getText().toString());
-        post.put("imageUrl",mStorageReference.child(ImageName).getPath());
+        post.put("imageUrl",mStorageReference.child(ImageName).getPath());*/
 
         //Create document
         mFirestore.collection("posts")
-                .add(post)
+                .document(EventUUID.toString()).set(mPost)
                 .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(MeuweActivity.this, e.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
             }
-        }).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
+            public void onSuccess(Void aVoid) {
                 //Show created activity
                 Intent mDisplayMeuweActivity = new Intent(MeuweActivity.this, DisplayMueweActivity.class);
-                mDisplayMeuweActivity.putExtra("DocRef",documentReference.getId());
+                mDisplayMeuweActivity.putExtra("EventUUID",EventUUID.toString());
                 startActivity(mDisplayMeuweActivity);
             }
         });

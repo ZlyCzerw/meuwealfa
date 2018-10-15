@@ -117,4 +117,5 @@
     <string name="PostIt">Post It!</string>
     <string name="ErrNoAppToMakePhotos">No App to make Photos</string>
     <string name="PostItHint">Post It!</string>
+    <string name="EventImageDesc">Event Image</string>
 </resources>
