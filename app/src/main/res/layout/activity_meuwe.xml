@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/imageTaken"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/Photo_Description"
         android:onClick="onClickImageTaken"
         android:scaleType="fitCenter"
@@ -26,6 +26,7 @@
         android:layout_width="384dp"
         android:layout_height="57dp"
         android:background="@color/common_google_signin_btn_text_dark_disabled"
+        android:elevation="5dp"
         android:hint="@string/PostIt"
         android:onClick="sendMessage"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,15 +45,13 @@
         android:fontFamily="sans-serif"
         android:hint="@string/Enter_text_box"
         android:inputType="textMultiLine"
-        android:onClick="onClickImageTaken"
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/post"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageTaken"
-        tools:text="@string/Description" />
+        app:layout_constraintTop_toBottomOf="@+id/imageTaken" />
 
     <TextView
         android:id="@+id/imageHintTextView"

@@ -1,8 +1,10 @@
 package eu.meuwe.app.meuwealfa;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Vector;
 
 public class Post {
     private String user;
@@ -20,6 +22,17 @@ public class Post {
         this.text = text;
         this.imageUrl = imageUrl;
         this.time = GregorianCalendar.getInstance().getTime();
+        this.Messages = new Vector<>();
+    }
+
+    public Post() {
+        this.user = "none";
+        this.latitude = 0;
+        this.longitude = 0;
+        this.text = "";
+        this.imageUrl = "";
+        this.time = GregorianCalendar.getInstance().getTime();
+        this.Messages = new Vector<>();
     }
 
     public String getUser() {

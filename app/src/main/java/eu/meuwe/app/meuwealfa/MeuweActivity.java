@@ -232,15 +232,6 @@ public class MeuweActivity extends AppCompatActivity {
                 mEnterText.getText().toString(),
                 mStorageReference.child(ImageName).getPath());
 
-        //Map <String,Object> post = new HashMap<>();
-        // All the data definition is below
-        /*post.put("user",mFirebaseUser.getUid());
-        post.put("time", simpleDateFormat.format(GregorianCalendar.getInstance().getTime()));
-        post.put("latitude",Latitude);
-        post.put("longitude",Longitude);
-        post.put("text",mEnterText.getText().toString());
-        post.put("imageUrl",mStorageReference.child(ImageName).getPath());*/
-
         //Create document
         mFirestore.collection("posts")
                 .document(EventUUID.toString()).set(mPost)

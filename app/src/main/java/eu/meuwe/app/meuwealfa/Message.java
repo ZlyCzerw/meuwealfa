@@ -14,6 +14,12 @@ public class Message {
         Time = new Date().getTime();
     }
 
+    public Message() {
+        Text = "";
+        User = "";
+        Time = new Date().getTime();
+    }
+
     public String getText() {
         return Text;
     }

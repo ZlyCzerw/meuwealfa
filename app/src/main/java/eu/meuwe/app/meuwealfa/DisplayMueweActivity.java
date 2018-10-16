@@ -1,11 +1,13 @@
 package eu.meuwe.app.meuwealfa;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +46,8 @@ public class DisplayMueweActivity extends AppCompatActivity {
     private ImageView eventImageView;
     private LayoutInflater layoutInflater;
     private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private LinearLayoutManager linearLayoutManager;
     private EditText messageText;
 
 
@@ -67,63 +71,48 @@ public class DisplayMueweActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         documentReference = mFirestore.collection("posts").document(EventUUID);
+        post = new Post();
 
         //get instance of layout inflater
         layoutInflater = this.getLayoutInflater();
+        // Configure recycler view
+        linearLayoutManager = new LinearLayoutManager(this.getApplicationContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        adapter = new MessageAdapter(post, firebaseAuth.getCurrentUser().getDisplayName());
+        recyclerView.setAdapter(adapter);
 
 
+        RefreshMessages();
+
+    }
+
+    private void RefreshMessages () {
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(!documentSnapshot.exists())
+                if (!documentSnapshot.exists()) {
+                    Toast.makeText(DisplayMueweActivity.this,
+                            "Post " + documentReference.getId() + " not found",
+                            Toast.LENGTH_SHORT).show();
+                } else //fill window
                 {
-                    Toast.makeText(DisplayMueweActivity.this, "Post "+ documentReference.getId()+" not found", Toast.LENGTH_SHORT).show();
-                }
-                else //fill window
-                {
-                    post = documentSnapshot.toObject(Post.class);
+                    Post post = documentSnapshot.toObject(Post.class);
                     //get image from firebase
-                    StorageReference mStorageReference = mFirebaseStorage.getReference()
-                            .child(post.getImageUrl());
-                    mStorageReference.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            mBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            eventImageView.setImageBitmap(mBitmap);
-                        }
-                    });
-                    //for each message
-                    for (Message message:post.getMessages()) {
-                        //create view as message received or message sent
-                        View v;
-                        TextView messageText;
-                        TextView messageUser;
-                        TextView messageTime;
-                        if(message.getUser()==firebaseAuth.getCurrentUser().toString())
-                        {
-                            v = layoutInflater.inflate(R.layout.message_sent, recyclerView);
-                        }
-                        else
-                        {
-                           v = layoutInflater.inflate(R.layout.message_received, recyclerView);
-                        }
-                        messageUser = v.findViewById(R.id.text_message_name);
-                        messageTime = v.findViewById(R.id.text_message_time);
-                        messageText = v.findViewById(R.id.text_message_time);
-
-                        messageUser.setText(message.getUser());
-                        messageText.setText(message.getText());
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-                        messageTime.setText(dateFormat.format(message.getTime()));
+                    if(!post.getImageUrl().isEmpty()) {
+                        StorageReference mStorageReference = mFirebaseStorage.getReference()
+                                .child(post.getImageUrl());
+                        mStorageReference.getBytes(1024 * 1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                mBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                eventImageView.setImageBitmap(mBitmap);
+                            }
+                        });
                     }
-
-                    /*
-                    documentReference.put("user",mFirebaseUser.getUid());
-                    documentReference.put("time", simpleDateFormat.format(GregorianCalendar.getInstance().getTime()));
-                    documentReference.put("latitude",Latitude);
-                    documentReference.put("longitude",Longitude);
-                    documentReference.put("text",mEnterText.getText().toString());
-                    documentReference.put("imageUrl",mStorageReference.child(ImageName).getPath());*/
+                    if (!post.getMessages().isEmpty()) {
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -132,31 +121,6 @@ public class DisplayMueweActivity extends AppCompatActivity {
                 Toast.makeText(DisplayMueweActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-    }
-
-    private void RefreshMessages (DocumentSnapshot documentSnapshot)
-    {
-        Post post = documentSnapshot.toObject(Post.class);
-        //get image from firebase
-        StorageReference mStorageReference = mFirebaseStorage.getReference()
-                .child(post.getImageUrl());
-        mStorageReference.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                mBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                eventImageView.setImageBitmap(mBitmap);
-            }
-        });
-        //for each message
-        for (Message message:post.getMessages()) {
-            //create view as message received or message sent
-            if(message.getUser()==firebaseAuth.getCurrentUser().toString())
-            {
-                layoutInflater.inflate(R.layout.message_sent, null);
-            }
-
-        }
     }
 
 
@@ -173,7 +137,10 @@ public class DisplayMueweActivity extends AppCompatActivity {
 
     public void sendMessage(View view)
     {
-        post.addMessage(messageText.getText().toString(),firebaseAuth.getCurrentUser().toString());
+        post.addMessage(messageText.getText().toString(),firebaseAuth.getCurrentUser().getDisplayName());
         documentReference.set(post);
+
+        RefreshMessages();
     }
+
 }

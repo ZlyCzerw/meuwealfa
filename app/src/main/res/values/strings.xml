@@ -118,4 +118,8 @@
     <string name="ErrNoAppToMakePhotos">No App to make Photos</string>
     <string name="PostItHint">Post It!</string>
     <string name="EventImageDesc">Event Image</string>
+    <string name="LoginText">Login</string>
+    <string name="showMapText">Show Map</string>
+    <string name="myPostsText">My Posts</string>
+    <string name="logoutText">Logout</string>
 </resources>

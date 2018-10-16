@@ -46,10 +46,12 @@
 
         <activity
             android:name=".MeuweActivity"
-            android:parentActivityName=".MeuweActivity" />
+            android:parentActivityName=".MeuweActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".DisplayMueweActivity"
-            android:parentActivityName=".MeuweActivity" />
+            android:parentActivityName=".MeuweActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,8 +61,10 @@
         </activity>
         <activity android:name=".AniaIconActivity" />
         <activity android:name=".ChooseLoginRegistrationActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegistrationActivity" />
+        <activity android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".RegistrationActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps">
