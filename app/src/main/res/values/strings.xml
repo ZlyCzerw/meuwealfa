@@ -3,7 +3,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="Photo_Description">now, write a short description</string>
     <string name="Description">tap to write description of an event...</string>
-    <string name="button_post">post it!</string>
+    <string name="button_post">POST IT!</string>
     <string name="title_activity_display_message">DisplayMessageActivity</string>
 
     <string name="action_settings">Settings</string>
@@ -114,12 +114,18 @@
     <string name="CameraWindow">camera</string>
     <string name="Take_Fake_Photo">-</string>
     <string name="AddPhotoHint">Tap to add photo</string>
-    <string name="PostIt">Post It!</string>
     <string name="ErrNoAppToMakePhotos">No App to make Photos</string>
-    <string name="PostItHint">Post It!</string>
     <string name="EventImageDesc">Event Image</string>
     <string name="LoginText">Login</string>
     <string name="showMapText">Show Map</string>
     <string name="myPostsText">My Posts</string>
     <string name="logoutText">Logout</string>
+    <string name="ProfileTabText">Profile</string>
+    <string name="PostsTabText">Posts</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="NameHint">Name</string>
+    <string name="emailText">E-mail</string>
+    <string name="passwordText">Password</string>
 </resources>

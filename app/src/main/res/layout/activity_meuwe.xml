@@ -15,7 +15,7 @@
         android:contentDescription="@string/Photo_Description"
         android:onClick="onClickImageTaken"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/nameText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,16 +27,15 @@
         android:layout_height="57dp"
         android:background="@color/common_google_signin_btn_text_dark_disabled"
         android:elevation="5dp"
-        android:hint="@string/PostIt"
         android:onClick="sendMessage"
+        android:text="@string/button_post"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
-        tools:text="@string/PostIt" />
+        app:layout_constraintTop_toBottomOf="@+id/nameText" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/nameText"
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="384dp"
         android:layout_height="0dp"
@@ -62,7 +61,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Tap to add photo!"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/nameText"
         app:layout_constraintEnd_toEndOf="@+id/imageTaken"
         app:layout_constraintStart_toStartOf="@+id/imageTaken"
         app:layout_constraintTop_toTopOf="@+id/imageTaken"

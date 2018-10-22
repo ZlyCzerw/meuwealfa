@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -15,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.EventLog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,23 +26,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MeuweActivity extends AppCompatActivity {
 
@@ -98,7 +90,7 @@ public class MeuweActivity extends AppCompatActivity {
 
         //Get UI references
         mPostIt =  findViewById(R.id.post);
-        mEnterText = findViewById(R.id.editText);
+        mEnterText = findViewById(R.id.nameText);
         mImageTaken = findViewById(R.id.imageTaken);
 
         //Get extras from previous activity
@@ -196,7 +188,7 @@ public class MeuweActivity extends AppCompatActivity {
      */
     public void sendMessage(View view) {
 
-        /*Intent intent = new Intent(this, DisplayMueweActivity.class);
+        /*Intent intent = new Intent(this, DisplayMeuweActivity.class);
         EditText editText = (EditText) findViewById(R.id.editText);
         String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
@@ -226,6 +218,7 @@ public class MeuweActivity extends AppCompatActivity {
         });
 
         Post mPost = new Post(
+                EventUUID.toString(),
                 mFirebaseUser.getUid(),
                 Latitude,
                 Longitude,
@@ -244,7 +237,7 @@ public class MeuweActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 //Show created activity
-                Intent mDisplayMeuweActivity = new Intent(MeuweActivity.this, DisplayMueweActivity.class);
+                Intent mDisplayMeuweActivity = new Intent(MeuweActivity.this, DisplayMeuweActivity.class);
                 mDisplayMeuweActivity.putExtra("EventUUID",EventUUID.toString());
                 startActivity(mDisplayMeuweActivity);
             }

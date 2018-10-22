@@ -7,25 +7,43 @@ import java.util.List;
 import java.util.Vector;
 
 public class Post {
+    private String uuid;
     private String user;
     private double latitude;
     private double longitude;
     private String text;
+    private String title;
     private String imageUrl;
     private Date time;
     private List<Message> Messages;
 
-    public Post(String user, double latitude, double longitude, String text, String imageUrl) {
+
+
+    public Post(String uuid, String user, double latitude, double longitude, String text, String imageUrl) {
+        this.uuid = uuid;
         this.user = user;
         this.latitude = latitude;
         this.longitude = longitude;
         this.text = text;
+        this.title = text.substring(0,Math.min(text.length(),12))+"...";
+        this.imageUrl = imageUrl;
+        this.time = GregorianCalendar.getInstance().getTime();
+        this.Messages = new Vector<>();
+    }
+    public Post(String uuid,String user, double latitude, double longitude, String text, String imageUrl,String title) {
+        this.uuid = uuid;
+        this.user = user;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.text = text;
+        this.title = title;
         this.imageUrl = imageUrl;
         this.time = GregorianCalendar.getInstance().getTime();
         this.Messages = new Vector<>();
     }
 
     public Post() {
+        this.uuid = "";
         this.user = "none";
         this.latitude = 0;
         this.longitude = 0;
@@ -99,5 +117,21 @@ public class Post {
     {
         Message newMessage = new Message (text,user);
         Messages.add(newMessage);
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

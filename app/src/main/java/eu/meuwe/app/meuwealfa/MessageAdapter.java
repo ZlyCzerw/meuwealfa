@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,8 +63,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
 
         holder.text_message_body.setText(Messages.get(position).getText());
         holder.text_message_name.setText(Messages.get(position).getUser());
-        holder.text_message_time.setText("00:00:00");
-
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+        holder.text_message_time.setText(simpleDateFormat.format(Messages.get(position).getTime()));
     }
 
     @Override

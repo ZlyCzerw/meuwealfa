@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class ChooseLoginRegistrationActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    Button mLogin, mRegister, mMyPosts;
+    Button mLogin, mRegister, mMyProfile;
     private void setUIonUser (){
         // Check if user is already logged in, and change UI
         mAuth = FirebaseAuth.getInstance();
@@ -25,7 +25,7 @@ public class ChooseLoginRegistrationActivity extends AppCompatActivity {
     private void setUIUserLoggedIn (){
         mLogin.setText(R.string.logoutText);
         mRegister.setText(R.string.showMapText);
-        mMyPosts.setVisibility(View.VISIBLE);
+        mMyProfile.setVisibility(View.VISIBLE);
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,7 +49,7 @@ public class ChooseLoginRegistrationActivity extends AppCompatActivity {
     private void setUIUserLoggedOut (){
         mLogin.setText(R.string.LoginText);
         mRegister.setText(R.string.fui_title_register_email);
-        mMyPosts.setVisibility(View.INVISIBLE);
+        mMyProfile.setVisibility(View.INVISIBLE);
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +76,7 @@ public class ChooseLoginRegistrationActivity extends AppCompatActivity {
 
         mLogin = findViewById(R.id.login);
         mRegister = findViewById(R.id.register);
-        mMyPosts = findViewById(R.id.myposts);
+        mMyProfile = findViewById(R.id.myposts);
 
         // Check if user is already logged in, and change UI
         setUIonUser();
@@ -87,10 +87,10 @@ public class ChooseLoginRegistrationActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        mMyPosts.setOnClickListener(new View.OnClickListener() {
+        mMyProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChooseLoginRegistrationActivity.this, RegistrationActivity.class);
+                Intent intent = new Intent(ChooseLoginRegistrationActivity.this, MyProfileActivity.class);
                 startActivity(intent);
                 return;
 
