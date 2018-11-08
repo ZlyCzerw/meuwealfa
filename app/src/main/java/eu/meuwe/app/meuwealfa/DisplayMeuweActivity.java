@@ -151,23 +151,23 @@ public class DisplayMeuweActivity extends AppCompatActivity {
     }
 
 
-    public void goBackHome() {
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
-    }
 
     public void sendMessage(View view)
     {
-        mPost.addMessage(messageText.getText().toString(),firebaseAuth.getCurrentUser().getEmail());
-        documentReference.set(mPost);
+        if(!messageText.getText().toString().isEmpty())
+        {
+            mPost.addMessage(messageText.getText().toString(),firebaseAuth.getCurrentUser().getEmail());
+            documentReference.set(mPost);
+            RefreshMessages();
+        }
 
-        RefreshMessages();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        goBackHome();
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
         finishActivity(1);
     }
 

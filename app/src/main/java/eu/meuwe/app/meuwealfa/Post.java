@@ -16,7 +16,7 @@ public class Post {
     private String imageUrl;
     private Date time;
     private List<Message> Messages;
-
+    private List<String> tags;
 
 
     public Post(String uuid, String user, double latitude, double longitude, String text, String imageUrl) {
@@ -29,8 +29,10 @@ public class Post {
         this.imageUrl = imageUrl;
         this.time = GregorianCalendar.getInstance().getTime();
         this.Messages = new Vector<>();
+        this.tags = new Vector<>();
     }
     public Post(String uuid,String user, double latitude, double longitude, String text, String imageUrl,String title) {
+
         this.uuid = uuid;
         this.user = user;
         this.latitude = latitude;
@@ -40,6 +42,8 @@ public class Post {
         this.imageUrl = imageUrl;
         this.time = GregorianCalendar.getInstance().getTime();
         this.Messages = new Vector<>();
+        this.tags = new Vector<>();
+
     }
 
     public Post() {
@@ -51,6 +55,7 @@ public class Post {
         this.imageUrl = "";
         this.time = GregorianCalendar.getInstance().getTime();
         this.Messages = new Vector<>();
+        this.tags = new Vector<>();
     }
 
     public String getUser() {
@@ -133,5 +138,10 @@ public class Post {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return getTitle();
     }
 }

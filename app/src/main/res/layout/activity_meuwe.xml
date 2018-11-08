@@ -10,12 +10,12 @@
 
     <ImageView
         android:id="@+id/imageTaken"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/Photo_Description"
         android:onClick="onClickImageTaken"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/nameText"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -52,19 +52,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageTaken" />
 
-    <TextView
-        android:id="@+id/imageHintTextView"
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Tap to add photo!"
-        app:layout_constraintBottom_toTopOf="@+id/nameText"
-        app:layout_constraintEnd_toEndOf="@+id/imageTaken"
-        app:layout_constraintStart_toStartOf="@+id/imageTaken"
-        app:layout_constraintTop_toTopOf="@+id/imageTaken"
-        tools:text="@string/AddPhotoHint" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
 
 </android.support.constraint.ConstraintLayout>

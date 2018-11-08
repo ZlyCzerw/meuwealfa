@@ -98,90 +98,12 @@ public class MeuweActivity extends AppCompatActivity {
         Latitude=intent.getDoubleExtra("Latitude",0);
         Longitude=intent.getDoubleExtra("Longitude",0);
 
-
-
-                /*
-
-        Bundle extras = getIntent().getExtras();
-        assert extras != null;
-        byte[] b = extras.getByteArray("capture");
-
-        if(b!=null){
-            ImageView image = findViewById(R.id.imageTaken);
-
-            Bitmap decodedBitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-
-            rotateBitmap = rotate(decodedBitmap);
-
-
-            image.setImageBitmap(rotateBitmap);
-        }
-
-        Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Button post = findViewById(R.id.post);
-        post.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveToEvent();
-            }
-        });*/
-    }
-
-    private void  saveToEvent() {
-
-        final DatabaseReference userEventDb = FirebaseDatabase.getInstance().getReference().child("Users").child("Uid").child("event");
-        final String key = userEventDb.push().getKey();
-
-        final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("pictures").child(key);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        rotateBitmap.compress(Bitmap.CompressFormat.JPEG,20 ,baos);
-        byte[] dataToUpload = baos.toByteArray();
-        UploadTask uploadTask = filePath.putBytes(dataToUpload);
-
-
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Uri imageUrl = taskSnapshot.getDownloadUrl();
-
-                Long startTimestamp = System.currentTimeMillis();
-                Long endTimestamp = startTimestamp + (24*60*60*1000);
-
-                Map<String, Object> mapToUpload = new HashMap<>();
-                mapToUpload.put("imageUrl", imageUrl.toString());
-                mapToUpload.put("startTimestamp", startTimestamp);
-                mapToUpload.put("endTimestamp", endTimestamp);
-
-                userEventDb.child(key).setValue(mapToUpload);
-                finish();
-                return;
-            }
-        });
-
-
-
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                finish();
-                return;
-
-            }
-        });
-
     }
 
 
-    private Bitmap rotate(Bitmap decodedBitmap) {
-        int w = decodedBitmap.getWidth();
-        int h = decodedBitmap.getHeight();
 
-        Matrix matrix = new Matrix();
-        matrix.setRotate(90);
 
-        return Bitmap.createBitmap(decodedBitmap, 0, 0, w, h, matrix, true);
 
-    }
 
     /**
      * Called when the user taps the Send button
@@ -269,4 +191,13 @@ public class MeuweActivity extends AppCompatActivity {
             mImageTaken.setImageBitmap(imageBitmap);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+        finishActivity(1);
+    }
+
 }

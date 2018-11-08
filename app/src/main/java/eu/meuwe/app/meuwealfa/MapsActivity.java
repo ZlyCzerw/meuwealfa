@@ -21,6 +21,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -103,15 +105,6 @@ public class MapsActivity extends FragmentActivity
         mLocationRequest.setFastestInterval(3000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
-        // Look for all posts nearby and add a marker
-
-
-        //mMap.addMarker(new MarkerOptions().position(
-        //        new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude())));
-        // Add a marker in Sydney and move the camera
-        final LatLng sydney = new LatLng(-34, 151);
-
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         //Add My Location Pointer on the map
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -126,6 +119,8 @@ public class MapsActivity extends FragmentActivity
 
         UpdateLocation();
         mMap.setOnInfoWindowClickListener(this);
+        // Look for all posts nearby and add a marker
+        refreshMarkers();
     }
 
     @Override
@@ -186,24 +181,21 @@ public class MapsActivity extends FragmentActivity
      */
     private void refreshMarkers() {
         cameraPosition = mMap.getCameraPosition().target;
-        LatLngBounds cameraBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-        //return this.southwest.latitude <= var4 && var4 <= this.northeast.latitude && this.zza(var1.longitude);
-        /*if (this.southwest.longitude <= this.northeast.longitude) {
-            return this.southwest.longitude <= var1 && var1 <= this.northeast.longitude;
-        } else {
-            return this.southwest.longitude <= var1 || var1 <= this.northeast.longitude;
-        }*/
+        final LatLngBounds cameraBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+
         //find all markers within range
         if(cameraBounds.southwest.longitude <= cameraBounds.northeast.longitude) {
-            postsRef.whereGreaterThanOrEqualTo("latitude", cameraBounds.southwest.latitude)
-                    .whereLessThanOrEqualTo("latitude", cameraBounds.northeast.latitude);
+            //postsRef.whereGreaterThanOrEqualTo("latitude", cameraBounds.southwest.latitude)
+            //        .whereLessThanOrEqualTo("latitude", cameraBounds.northeast.latitude);
+            //TODO firestore doesnt work with such complex query, think of a workaround
             postsRef.whereGreaterThanOrEqualTo("longitude", cameraBounds.southwest.longitude)
                     .whereLessThanOrEqualTo("longitude", cameraBounds.northeast.longitude);
         }
         else
         {
-            postsRef.whereGreaterThanOrEqualTo("latitude", cameraBounds.southwest.latitude)
-                    .whereLessThanOrEqualTo("latitude", cameraBounds.northeast.latitude)
+            postsRef
+                    //.whereGreaterThanOrEqualTo("latitude", cameraBounds.southwest.latitude)
+                    //.whereLessThanOrEqualTo("latitude", cameraBounds.northeast.latitude)
                     .whereGreaterThanOrEqualTo("longitude", cameraBounds.northeast.longitude)
                     .whereLessThanOrEqualTo("longitude", cameraBounds.southwest.longitude);
         }
@@ -212,12 +204,16 @@ public class MapsActivity extends FragmentActivity
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 localPosts = queryDocumentSnapshots.toObjects(Post.class);
                 //put a marker for each local post in range
+                BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromResource(R.drawable.meuwemarkericon);
                 for(Post onePost:localPosts)
                 {
                     LatLng markerPosition = new LatLng(onePost.getLatitude(), onePost.getLongitude());
-                    mMap.addMarker(new MarkerOptions()
-                            .position(markerPosition)
-                            .title(onePost.getTitle())).setTag(onePost.getUuid());
+                    if (cameraBounds.contains(markerPosition))//TODO this is workaround, but is done on aplication side, not server. It may cause problems with a lot of markers
+                    {//TODO add marker filtering on tag list
+                        mMap.addMarker(new MarkerOptions()
+                                .position(markerPosition)
+                                .title(onePost.getTitle()).icon(markerIcon)).setTag(onePost.getUuid());
+                    }
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -240,7 +236,8 @@ public class MapsActivity extends FragmentActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finishActivity(1);
+        Intent intent = new Intent(MapsActivity.this, ChooseLoginRegistrationActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -251,4 +248,5 @@ public class MapsActivity extends FragmentActivity
         mMeuweActivity.putExtra("Longitude",latLng.longitude);
         startActivity(mMeuweActivity);
     }
+
 }

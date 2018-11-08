@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -53,24 +55,43 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
             case SENT:
             default:
                 itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_sent,parent,false);
+                break;
         }
-
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
         holder.text_message_body.setText(Messages.get(position).getText());
         holder.text_message_name.setText(Messages.get(position).getUser());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+        Calendar currentTime = Calendar.getInstance();
+        Calendar messageTime = Calendar.getInstance();
+        Date messageDate = new Date();
+        messageDate.setTime(Messages.get(position).getTime());
+        messageTime.setTime(messageDate);
+        SimpleDateFormat simpleDateFormat;
+        if(currentTime.get(currentTime.DAY_OF_YEAR)==messageTime.get(messageTime.DAY_OF_YEAR)
+                && currentTime.get(Calendar.YEAR)==messageTime.get(Calendar.YEAR))
+        {
+            simpleDateFormat = new SimpleDateFormat("hh:mm:ss");
+        }
+        else
+        {
+            simpleDateFormat = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+        }
+
         holder.text_message_time.setText(simpleDateFormat.format(Messages.get(position).getTime()));
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(Messages.get(position).getUser() == localuser) return SENT;
-        else return RECEIVED;
+        String msgUsr = Messages.get(position).getUser();
+        if(msgUsr.compareToIgnoreCase(localuser)==0) {//if the same
+            return SENT;
+        }
+        else {
+            return RECEIVED;
+        }
     }
 
     @Override

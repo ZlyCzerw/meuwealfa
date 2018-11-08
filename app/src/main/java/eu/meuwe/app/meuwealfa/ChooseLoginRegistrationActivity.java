@@ -81,11 +81,11 @@ public class ChooseLoginRegistrationActivity extends AppCompatActivity {
         // Check if user is already logged in, and change UI
         setUIonUser();
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null){
+        /*if (mAuth.getCurrentUser() != null){
             Intent intent = new Intent(ChooseLoginRegistrationActivity.this, MapsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-        }
+        }*/
 
         mMyProfile.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +27,7 @@ import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private EditText mEmail, mPassword, mName;
+    private EditText mEmail, mPassword, mName,mConfirmPassword;
     private Button mRegister;
     private static final String TAG ="Registration Activity";
     private static final String FIELDS_CANNOT_BE_EMPTY ="Fields cannot be empty";
@@ -46,24 +47,34 @@ public class RegistrationActivity extends AppCompatActivity {
         mRegister = findViewById(R.id.registerButton);
         mEmail = findViewById(R.id.email);
         mPassword = findViewById(R.id.password);
+        mConfirmPassword = findViewById(R.id.password2);
 
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
+                final String confirmPassword = mConfirmPassword.getText().toString();
                 final String name = mName.getText().toString();
                 if( email.isEmpty()
                         ||password.isEmpty()
-                        ||name.isEmpty()) Toast.makeText(getApplicationContext(), FIELDS_CANNOT_BE_EMPTY,Toast.LENGTH_SHORT).show();
-
+                        ||confirmPassword.isEmpty()
+                        ||name.isEmpty()){
+                    Toast.makeText(getApplicationContext(), R.string.FieldsCannotBeEmptyError,Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (password.compareTo(confirmPassword)!=0)//check if they match
+                {
+                    Toast.makeText(RegistrationActivity.this, R.string.PasswordsDontMatchError, Toast.LENGTH_SHORT).show();
+                }
                 // add new user to Firebase
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                Toast.makeText(getApplicationContext(),USER_SUCCESSFULLY_ADDED,Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),R.string.UserSuccesfullyAddedToast ,Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                authResult.getUser().updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(name).build());//TODO add.setPhotoUri
                                 //Intent MapsActivityIntent = new Intent(RegistrationActivity.this, MapsActivity.class);
                                 //startActivity(MapsActivityIntent);
                                 finish();
@@ -81,12 +92,11 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
     @Override
-    protected void onStart() {
-        super.onStart();
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, ChooseLoginRegistrationActivity.class);
+        startActivity(intent);
+        finish();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 }

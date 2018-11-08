@@ -61,7 +61,7 @@ public class MyProfileActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     QuerySnapshot queryDocumentSnapshots = task.getResult();
-                    //myPosts = queryDocumentSnapshots.getDocuments();
+
                     myPosts = queryDocumentSnapshots.toObjects(Post.class);
 
                     //fill the ListView with retrieved query
@@ -74,7 +74,7 @@ public class MyProfileActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(MyProfileActivity.this, task.getException().getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyProfileActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -89,5 +89,13 @@ public class MyProfileActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, ChooseLoginRegistrationActivity.class);
+        startActivity(intent);
+        finishActivity(1);
+    }
+
 
 }
