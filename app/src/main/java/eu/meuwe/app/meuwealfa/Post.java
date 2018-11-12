@@ -17,6 +17,7 @@ public class Post {
     private Date time;
     private List<Message> Messages;
     private List<String> tags;
+    private int viewsCounter;
 
 
     public Post(String uuid, String user, double latitude, double longitude, String text, String imageUrl) {
@@ -56,6 +57,7 @@ public class Post {
         this.time = GregorianCalendar.getInstance().getTime();
         this.Messages = new Vector<>();
         this.tags = new Vector<>();
+        this.viewsCounter =0;
     }
 
     public String getUser() {
@@ -143,5 +145,12 @@ public class Post {
     @Override
     public String toString() {
         return getTitle();
+    }
+
+    public int getViewsCounter() {
+        return viewsCounter;
+    }
+    public void incrementViewsCounter(){
+        viewsCounter++;
     }
 }
