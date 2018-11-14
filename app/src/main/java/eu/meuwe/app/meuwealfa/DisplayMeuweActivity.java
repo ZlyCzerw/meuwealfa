@@ -56,10 +56,8 @@ public class DisplayMeuweActivity extends AppCompatActivity {
         EventUUID = intent.getStringExtra("EventUUID");
 
         //Init UI references
-        eventImageView = findViewById(R.id.eventImageView);
         recyclerView = findViewById(R.id.recyclerView);
         messageText = findViewById(R.id.messageText);
-        eventDescText = findViewById(R.id.eventDescText);
 
 
         //Initialise screen with data from database
@@ -97,19 +95,7 @@ public class DisplayMeuweActivity extends AppCompatActivity {
                 {
                     Post post = documentSnapshot.toObject(Post.class);
                     //get image from firebase
-                    if(!post.getImageUrl().isEmpty()) {
-                        StorageReference mStorageReference = mFirebaseStorage.getReference()
-                                .child(post.getImageUrl());
-                        mStorageReference.getBytes(1024 * 1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                mBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                eventImageView.setImageBitmap(mBitmap);
-                            }
-                        });
-
-                    }
-                    eventDescText.setText(post.getText());
+                    post.incrementViewsCounter();
                     //attach recycleview adapter
                     mPost = post;
                     adapter = new MessageAdapter(post, firebaseUser.getEmail());

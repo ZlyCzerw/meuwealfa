@@ -132,5 +132,7 @@
     <string name="PasswordsDontMatchError">Passwords don\'t match!</string>
     <string name="FieldsCannotBeEmptyError">Fields cannot be empty!</string>
     <string name="UserSuccesfullyAddedToast">User successfully added!</string>
+    <string name="numberOfViews">%d views</string>
+    <string name="numberOfResponses">%d responses</string>
     <item name="PasswordsDontMatchError" type="id">Passwords don't match!</item>
 </resources>

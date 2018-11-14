@@ -31,33 +31,16 @@ public class Post {
         this.time = GregorianCalendar.getInstance().getTime();
         this.Messages = new Vector<>();
         this.tags = new Vector<>();
+        this.viewsCounter =0;
     }
     public Post(String uuid,String user, double latitude, double longitude, String text, String imageUrl,String title) {
-
-        this.uuid = uuid;
-        this.user = user;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.text = text;
+        this(uuid,user,latitude,longitude,text,imageUrl);
         this.title = title;
-        this.imageUrl = imageUrl;
-        this.time = GregorianCalendar.getInstance().getTime();
-        this.Messages = new Vector<>();
         this.tags = new Vector<>();
-
-    }
+   }
 
     public Post() {
-        this.uuid = "";
-        this.user = "none";
-        this.latitude = 0;
-        this.longitude = 0;
-        this.text = "";
-        this.imageUrl = "";
-        this.time = GregorianCalendar.getInstance().getTime();
-        this.Messages = new Vector<>();
-        this.tags = new Vector<>();
-        this.viewsCounter =0;
+        this("","none",0,0,"","","");
     }
 
     public String getUser() {
