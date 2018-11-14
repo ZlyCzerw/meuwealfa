@@ -5,39 +5,35 @@
     build-mode="COLD"
     density="xxhdpi"
     format="10"
-    ir-eligibility="METHOD_DELETED"
     plugin-version="3.1.2"
-    timestamp="1542131605047"
+    timestamp="1542203965648"
     token="2593862557838357870"
     verifier="COLD_SWAP_REQUESTED" >
 
     <task
         name="javac"
-        duration="8768" />
+        duration="0" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="880" />
+        duration="0" />
     <task
         name="verifier"
-        duration="251" />
+        duration="0" />
 
     <artifact
-        location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
-        type="SPLIT" />
+        location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\instant-run-apk\debug\app-debug.apk"
+        type="SPLIT_MAIN" />
 
     <build
         build-mode="FULL"
         ir-eligibility="CLASS_ADDED"
-        timestamp="1542120453849"
+        timestamp="1542193311823"
         verifier="COLD_SWAP_REQUESTED" >
         <artifact
             location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_1.apk"
             type="SPLIT" />
         <artifact
             location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_0.apk"
@@ -46,13 +42,16 @@
             location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_2.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
+            location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_1.apk"
             type="SPLIT" />
         <artifact
             location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
             type="SPLIT" />
         <artifact
             location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
             type="SPLIT" />
         <artifact
             location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_6.apk"
@@ -72,12 +71,20 @@
     </build>
     <build
         build-mode="COLD"
-        ir-eligibility="METHOD_DELETED"
-        timestamp="1542131605047"
+        ir-eligibility="IMPLEMENTED_INTERFACES_CHANGE"
+        timestamp="1542202916780"
         verifier="COLD_SWAP_REQUESTED" >
         <artifact
             location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
             type="SPLIT" />
+    </build>
+    <build
+        build-mode="COLD"
+        timestamp="1542203965648"
+        verifier="COLD_SWAP_REQUESTED" >
+        <artifact
+            location="C:\Users\Krzysiek\StudioProjects\meuwealfa\app\build\intermediates\instant-run-apk\debug\app-debug.apk"
+            type="SPLIT_MAIN" />
     </build>
 
 </instant-run>

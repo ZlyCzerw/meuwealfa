@@ -29,10 +29,8 @@ import com.google.firebase.storage.StorageReference;
 public class DisplayMeuweActivity extends AppCompatActivity {
 
     private FirebaseFirestore mFirestore;
-    private FirebaseStorage mFirebaseStorage;
     private String EventUUID;
     private DocumentReference documentReference;
-    private Bitmap mBitmap;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private Post mPost;
@@ -44,7 +42,7 @@ public class DisplayMeuweActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private LinearLayoutManager linearLayoutManager;
     private EditText messageText;
-    private TextView eventDescText;
+
 
 
     @Override
@@ -62,7 +60,6 @@ public class DisplayMeuweActivity extends AppCompatActivity {
 
         //Initialise screen with data from database
         mFirestore = FirebaseFirestore.getInstance();
-        mFirebaseStorage = FirebaseStorage.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 

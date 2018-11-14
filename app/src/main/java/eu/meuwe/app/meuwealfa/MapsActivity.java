@@ -1,8 +1,10 @@
 package eu.meuwe.app.meuwealfa;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -36,12 +38,70 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.ui.IconGenerator;
 
 import java.util.List;
 
+import static com.google.maps.android.ui.IconGenerator.STYLE_RED;
+
 
 public class MapsActivity extends FragmentActivity
-        implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+        implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMapLongClickListener {
+
+    private class meuweClusterItem implements ClusterItem {
+        private final LatLng mPosition;
+        private final String mTitle;
+        private final String mTag;
+
+        public meuweClusterItem(LatLng position, String title, String tag) {
+            this.mPosition = position;
+            this.mTitle = title;
+            this.mTag = tag;
+        }
+
+
+        public LatLng getPosition() {
+            return mPosition;
+        }
+
+        public String getTitle() {
+            return mTitle;
+        }
+
+        public String getSnippet() {
+            return null;
+        }
+
+        public String getTag() {
+            return mTag;
+        }
+    }
+
+    private class meuweClusterRenderer extends DefaultClusterRenderer<meuweClusterItem>{
+        private final IconGenerator iconGenerator = new IconGenerator(getApplicationContext());
+
+        public meuweClusterRenderer() {
+            super(getApplicationContext(), mMap, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(meuweClusterItem item, MarkerOptions markerOptions) {
+            //super.onBeforeClusterItemRendered(item, markerOptions);
+
+            Bitmap icon = iconGenerator.makeIcon(item.getTitle());
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster<meuweClusterItem> cluster) {
+            return cluster.getSize() >1;
+        }
+    }
 
     private GoogleMap mMap;
 
@@ -53,6 +113,10 @@ public class MapsActivity extends FragmentActivity
     private Location mLastLocation;
     private LocationCallback mLocationCallback;
     private LatLng cameraPosition;
+
+    //Maps Utils
+    private IconGenerator iconGenerator;
+    private ClusterManager<meuweClusterItem> clusterManager;
 
     //Firebase variables
     private FirebaseFirestore firestore;
@@ -73,6 +137,7 @@ public class MapsActivity extends FragmentActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
     }
 
@@ -118,28 +183,34 @@ public class MapsActivity extends FragmentActivity
         }
 
         UpdateLocation();
-        mMap.setOnInfoWindowClickListener(this);
-        // Look for all posts nearby and add a marker
-        refreshMarkers();
+
+
+        //Map utils
+        //Generation of icons with titles
+        iconGenerator = new IconGenerator(this);
+        iconGenerator.setStyle(STYLE_RED);
+        //clustering large amount of markers
+        clusterManager = new ClusterManager<meuweClusterItem>(this, mMap);
+        clusterManager.setAnimation(true);
+        clusterManager.setRenderer(new meuweClusterRenderer());
+
+        mMap.setOnCameraIdleListener(clusterManager);
+        mMap.setOnMarkerClickListener(clusterManager);
+        clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<meuweClusterItem>() {
+            @Override
+            public boolean onClusterItemClick(meuweClusterItem meuweClusterItem) {
+                //get UUID out of marker tag
+                Intent intent = new Intent(MapsActivity.this, DisplayMeuweActivity.class);
+                intent.putExtra("EventUUID", meuweClusterItem.getTag());
+                startActivity(intent);
+                return true;
+            }
+        });
+
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        return false;
-    }
 
-    /**
-     * This is what happens when user clicks on the info window of selected marker
-     * Opens DisplayMeuweActivity and passes unique UUID of the post.
-     * @param marker
-     */
-    @Override
-    public void onInfoWindowClick(Marker marker) {
-        //get UUID out of marker tag
-        Intent intent = new Intent(MapsActivity.this, DisplayMeuweActivity.class);
-        intent.putExtra("EventUUID",(String) marker.getTag());
-        startActivity(intent);
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -167,7 +238,8 @@ public class MapsActivity extends FragmentActivity
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                 new LatLng(mLastLocation.getLatitude(),
                                 mLastLocation.getLongitude()), DEFAULT_ZOOM));
-
+                        // Look for all posts nearby and add a marker
+                        refreshMarkers();
                     }
                 }
             });
@@ -208,13 +280,18 @@ public class MapsActivity extends FragmentActivity
                 for(Post onePost:localPosts)
                 {
                     LatLng markerPosition = new LatLng(onePost.getLatitude(), onePost.getLongitude());
-                    if (cameraBounds.contains(markerPosition))//TODO this is workaround, but is done on aplication side, not server. It may cause problems with a lot of markers
+                    if (cameraBounds.contains(markerPosition))//TODO this is workaround, but is done on application side, not server. It may cause problems with a lot of markers
                     {//TODO add marker filtering on tag list
-                        mMap.addMarker(new MarkerOptions()
+                           /*mMap.addMarker(new MarkerOptions()
                                 .position(markerPosition)
-                                .title(onePost.getTitle()).icon(markerIcon)).setTag(onePost.getUuid());
+                                //Generate Marker Icon on the go with title
+                                .icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon(onePost.getTitle()))))
+                                .setTag(onePost.getUuid());*/
+                           meuweClusterItem item = new meuweClusterItem(markerPosition,onePost.getTitle(),onePost.getUuid());
+                           clusterManager.addItem(item);
                     }
                 }
+                clusterManager.cluster();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
