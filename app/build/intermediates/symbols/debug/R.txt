@@ -626,10 +626,11 @@ int color switch_thumb_material_dark 0x7f060079
 int color switch_thumb_material_light 0x7f06007a
 int color switch_thumb_normal_material_dark 0x7f06007b
 int color switch_thumb_normal_material_light 0x7f06007c
-int color tooltip_background_dark 0x7f06007d
-int color tooltip_background_light 0x7f06007e
-int color zielonkawy 0x7f06007f
-int color zielonymeuwe 0x7f060080
+int color tintedBackground 0x7f06007d
+int color tooltip_background_dark 0x7f06007e
+int color tooltip_background_light 0x7f06007f
+int color zielonkawy 0x7f060080
+int color zielonymeuwe 0x7f060081
 int dimen abc_action_bar_content_inset_material 0x7f070000
 int dimen abc_action_bar_content_inset_with_nav 0x7f070001
 int dimen abc_action_bar_default_height_material 0x7f070002
@@ -1421,7 +1422,8 @@ int raw amu_unknwown_folder 0x7f100011
 int raw amu_unsupported 0x7f100012
 int raw amu_visibility_ground_overlay 0x7f100013
 int raw maps_style_meuwe1 0x7f100014
-int raw meuwemarkericon 0x7f100015
+int raw maps_style_paper 0x7f100015
+int raw meuwemarkericon 0x7f100016
 int string AddPhotoHint 0x7f110000
 int string Button_Publish 0x7f110001
 int string CameraWindow 0x7f110002

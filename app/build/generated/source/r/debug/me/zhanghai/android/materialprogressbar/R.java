@@ -378,8 +378,8 @@ public final class R {
         public static final int switch_thumb_material_light = 0x7f06007a;
         public static final int switch_thumb_normal_material_dark = 0x7f06007b;
         public static final int switch_thumb_normal_material_light = 0x7f06007c;
-        public static final int tooltip_background_dark = 0x7f06007d;
-        public static final int tooltip_background_light = 0x7f06007e;
+        public static final int tooltip_background_dark = 0x7f06007e;
+        public static final int tooltip_background_light = 0x7f06007f;
     }
     public static final class dimen {
         public static final int abc_action_bar_content_inset_material = 0x7f070000;

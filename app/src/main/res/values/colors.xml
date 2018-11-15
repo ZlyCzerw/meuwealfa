@@ -7,4 +7,5 @@
     <color name="pomarancz">#7a890bff</color>
     <color name="zielonymeuwe">#62f9c6</color>
     <color name="granatmeuwe">#101333</color>
+    <color name="tintedBackground">#3c000000</color>
 </resources>

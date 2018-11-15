@@ -1,4 +1,4 @@
-#Thu Nov 15 11:58:06 CET 2018
+#Thu Nov 15 14:05:20 CET 2018
 path.3=classes.dex
 path.2=classes.dex
 path.1=classes.dex
@@ -7,7 +7,7 @@ renamed.3=classes4.dex
 renamed.2=classes3.dex
 renamed.1=classes2.dex
 renamed.0=classes.dex
-base.3=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\353
-base.2=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\355
-base.1=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\352
-base.0=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\354
+base.3=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\370
+base.2=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\372
+base.1=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\369
+base.0=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\371

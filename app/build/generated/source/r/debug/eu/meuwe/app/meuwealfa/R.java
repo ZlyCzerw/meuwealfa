@@ -3945,10 +3945,11 @@ public final class R {
     public static final int switch_thumb_material_light=0x7f06007a;
     public static final int switch_thumb_normal_material_dark=0x7f06007b;
     public static final int switch_thumb_normal_material_light=0x7f06007c;
-    public static final int tooltip_background_dark=0x7f06007d;
-    public static final int tooltip_background_light=0x7f06007e;
-    public static final int zielonkawy=0x7f06007f;
-    public static final int zielonymeuwe=0x7f060080;
+    public static final int tintedBackground=0x7f06007d;
+    public static final int tooltip_background_dark=0x7f06007e;
+    public static final int tooltip_background_light=0x7f06007f;
+    public static final int zielonkawy=0x7f060080;
+    public static final int zielonymeuwe=0x7f060081;
   }
   public static final class dimen {
     public static final int abc_action_bar_content_inset_material=0x7f070000;
@@ -4760,7 +4761,8 @@ public final class R {
     public static final int amu_unsupported=0x7f100012;
     public static final int amu_visibility_ground_overlay=0x7f100013;
     public static final int maps_style_meuwe1=0x7f100014;
-    public static final int meuwemarkericon=0x7f100015;
+    public static final int maps_style_paper=0x7f100015;
+    public static final int meuwemarkericon=0x7f100016;
   }
   public static final class string {
     public static final int AddPhotoHint=0x7f110000;

@@ -19,9 +19,12 @@
 
     <TextView
         android:id="@+id/text_message_body"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/tintedBackground"
+        android:backgroundTintMode="src_atop"
         android:text="Some Text"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat"
         app:layout_constraintBottom_toBottomOf="@id/image_message_profile"
         app:layout_constraintLeft_toLeftOf="@id/image_message_profile"

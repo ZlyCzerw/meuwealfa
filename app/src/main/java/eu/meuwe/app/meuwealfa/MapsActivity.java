@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -105,9 +106,9 @@ public class MapsActivity extends FragmentActivity
 
     private GoogleMap mMap;
 
+
     private static final int PERMISSION_ACCESS_COARSE_LOCATION =10;
     private static final int DEFAULT_ZOOM =15;
-    private static final int MARKERS_EXTENT = 1;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
@@ -154,6 +155,10 @@ public class MapsActivity extends FragmentActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        //Applying map style
+        boolean result = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.maps_style_meuwe1));
+
+        if(result)result = true;
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {
