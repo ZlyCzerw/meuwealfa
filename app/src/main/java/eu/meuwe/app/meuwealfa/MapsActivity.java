@@ -276,7 +276,7 @@ public class MapsActivity extends FragmentActivity
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 localPosts = queryDocumentSnapshots.toObjects(Post.class);
                 //put a marker for each local post in range
-                BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromResource(R.drawable.meuwemarkericon);
+                clusterManager.clearItems();
                 for(Post onePost:localPosts)
                 {
                     LatLng markerPosition = new LatLng(onePost.getLatitude(), onePost.getLongitude());

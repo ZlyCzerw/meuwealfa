@@ -1,21 +1,20 @@
 package eu.meuwe.app.meuwealfa;
 
-import android.app.Activity;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
+
+import java.io.File;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static java.security.AccessController.getContext;
+
 
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHolder> {
@@ -56,15 +55,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
         post = inPost;
         Messages = new ArrayList<>();
         Messages = post.getMessages();
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        StorageReference mStorageReference = firebaseStorage.getReference()
-                .child(post.getImageUrl());
-        mStorageReference.getBytes(1024 * 1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                mBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            }
-        });
     }
 
     @NonNull
@@ -93,6 +83,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
             holder.text_message_body.setText(post.getText());
             if(!post.getImageUrl().isEmpty())
             {
+                //Get post image from cache
+                String filename = holder.image_message_profile.getResources().getString(R.string.postbitmapCache);
+                File cacheDir = holder.image_message_profile.getContext().getCacheDir();
+                String path = cacheDir.getPath()+"/"+filename;
+                mBitmap = BitmapFactory.decodeFile(path);
                 holder.image_message_profile.setImageBitmap(mBitmap);
             }
 

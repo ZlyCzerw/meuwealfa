@@ -39,14 +39,9 @@ import java.util.UUID;
 
 public class MeuweActivity extends AppCompatActivity {
 
-    public static final String EXTRA_MESSAGE = "eu.meuwe.app.meuwealfa";
-
-    String Uid;
-    Bitmap bitmap;
-    Bitmap rotateBitmap;
     private Button mPostIt;
     private ImageView mImageTaken;
-    private EditText mEnterText;
+    private EditText mEnterText,mTitle;
     private double Latitude,Longitude;
 
     private FirebaseAuth mFirebaseAuth;
@@ -56,25 +51,6 @@ public class MeuweActivity extends AppCompatActivity {
     //request codes
     private final int REQUEST_IMAGE_CAPTURE = 101;
     private final int PERMISSION_CAMERA =102;
-
-  /* @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meuwe);
-
-
-        try {
-            bitmap = BitmapFactory.decodeStream(getApplication().openFileInput("capture"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            finish();
-            return;
-        }
-
-        ImageView mImage = findViewById(R.id.imageTaken);
-        mImage.setImageBitmap(bitmap);
-        Uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +68,7 @@ public class MeuweActivity extends AppCompatActivity {
         mPostIt =  findViewById(R.id.post);
         mEnterText = findViewById(R.id.nameText);
         mImageTaken = findViewById(R.id.imageTaken);
+        mTitle = findViewById(R.id.title);
 
         //Get extras from previous activity
         Intent intent = getIntent();
@@ -101,26 +78,13 @@ public class MeuweActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
     /**
      * Called when the user taps the Send button
      */
     public void sendMessage(View view) {
 
-        /*Intent intent = new Intent(this, DisplayMeuweActivity.class);
-        EditText editText = (EditText) findViewById(R.id.editText);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);*/
-
-
         //Add all the data to firestore
-        //Get current date
-        SimpleDateFormat simpleDateFormat;
-        simpleDateFormat = new SimpleDateFormat("yy/MM/dd;HH:mm:ss");
+
         //Upload img to firebase storage
         StorageReference mStorageReference = mFirebaseStorage.getReference();
         final UUID EventUUID = UUID.randomUUID(); // generate unique ID for image
@@ -145,7 +109,8 @@ public class MeuweActivity extends AppCompatActivity {
                 Latitude,
                 Longitude,
                 mEnterText.getText().toString(),
-                mStorageReference.child(ImageName).getPath());
+                mStorageReference.child(ImageName).getPath(),
+                mTitle.getText().toString());
 
         //Create document
         mFirestore.collection("posts")

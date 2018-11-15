@@ -134,5 +134,7 @@
     <string name="UserSuccesfullyAddedToast">User successfully added!</string>
     <string name="numberOfViews">%d views</string>
     <string name="numberOfResponses">%d responses</string>
+    <string name="TitleText">Title</string>
+    <string name="postbitmapCache">postbitmapCache.png</string>
     <item name="PasswordsDontMatchError" type="id">Passwords don't match!</item>
 </resources>
