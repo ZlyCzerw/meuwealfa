@@ -1,7 +1,7 @@
-#Thu Nov 15 13:43:38 CET 2018
-base.0=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\368
+#Thu Nov 22 15:41:21 CET 2018
+base.0=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\385
 path.1=classes2.dex
 renamed.1=classes2.dex
 path.0=classes.dex
 renamed.0=classes.dex
-base.1=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\368
+base.1=C\:\\Users\\Krzysiek\\StudioProjects\\meuwealfa\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\385

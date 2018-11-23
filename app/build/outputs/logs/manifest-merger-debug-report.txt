@@ -286,7 +286,7 @@ ADDED from C:\Users\Krzysiek\StudioProjects\meuwealfa\app\src\main\AndroidManife
 	android:grantUriPermissions
 		ADDED from C:\Users\Krzysiek\StudioProjects\meuwealfa\app\src\main\AndroidManifest.xml:82:13-47
 	android:authorities
-		ADDED from C:\Users\Krzysiek\StudioProjects\meuwealfa\app\src\main\AndroidManifest.xml:80:13-67
+		ADDED from C:\Users\Krzysiek\StudioProjects\meuwealfa\app\src\main\AndroidManifest.xml:80:13-70
 	android:exported
 		ADDED from C:\Users\Krzysiek\StudioProjects\meuwealfa\app\src\main\AndroidManifest.xml:81:13-37
 	android:name
@@ -647,6 +647,8 @@ ADDED from [com.wonderkiln:camerakit:0.12.0] C:\Users\Krzysiek\.gradle\caches\tr
 		ADDED from [com.wonderkiln:camerakit:0.12.0] C:\Users\Krzysiek\.gradle\caches\transforms-1\files-1.1\camerakit-0.12.0.aar\2dbaacf784d321c740758a775a81620b\AndroidManifest.xml:23:9-33
 	android:name
 		ADDED from [com.wonderkiln:camerakit:0.12.0] C:\Users\Krzysiek\.gradle\caches\transforms-1\files-1.1\camerakit-0.12.0.aar\2dbaacf784d321c740758a775a81620b\AndroidManifest.xml:22:9-51
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+IMPLIED from C:\Users\Krzysiek\StudioProjects\meuwealfa\app\src\main\AndroidManifest.xml:2:1-89:12 reason: com.wonderkiln.camerakit requested WRITE_EXTERNAL_STORAGE
 meta-data#com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar
 ADDED from [com.google.firebase:firebase-firestore:17.1.3] C:\Users\Krzysiek\.gradle\caches\transforms-1\files-1.1\firebase-firestore-17.1.3.aar\8aca6e932ae254a34b085d881acfbc6f\AndroidManifest.xml:15:13-17:85
 	android:value
