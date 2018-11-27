@@ -136,5 +136,14 @@
     <string name="numberOfResponses">%d responses</string>
     <string name="TitleText">Title</string>
     <string name="postbitmapCache">postbitmapCache.png</string>
+    <string name="SearchHereButtonMapText">Search Here!</string>
+    <string name="SearchTagHint">Search Tag</string>
+    <string name="tagsListText">Tags List</string>
     <item name="PasswordsDontMatchError" type="id">Passwords don't match!</item>
+    <string-array name="tagsList">
+        <item>SPORT</item>
+        <item>WORK</item>
+        <item>OUTDOORS</item>
+        <item>SEX</item>
+    </string-array>
 </resources>

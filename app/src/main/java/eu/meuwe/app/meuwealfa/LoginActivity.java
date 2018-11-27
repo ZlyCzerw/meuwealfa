@@ -56,17 +56,24 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
-                mAuth.signInWithEmailAndPassword(email,password).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                    //startActivity(MapsActivityIntent);
-                    }
-                });
+                if(!email.isEmpty()&&!password.isEmpty())
+                {
+                    mAuth.signInWithEmailAndPassword(email,password).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            //startActivity(MapsActivityIntent);
+                        }
+                    });
+                }else
+                {
+                    Toast.makeText(LoginActivity.this, R.string.FieldsCannotBeEmptyError, Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

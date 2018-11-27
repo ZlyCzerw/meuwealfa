@@ -65,29 +65,31 @@ public class RegistrationActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), R.string.FieldsCannotBeEmptyError,Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (password.compareTo(confirmPassword)!=0)//check if they match
+                else if (password.compareTo(confirmPassword)!=0)//check if they match
                 {
                     Toast.makeText(RegistrationActivity.this, R.string.PasswordsDontMatchError, Toast.LENGTH_SHORT).show();
                 }
-                // add new user to Firebase
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                            @Override
-                            public void onSuccess(AuthResult authResult) {
-                                Toast.makeText(getApplicationContext(),R.string.UserSuccesfullyAddedToast ,Toast.LENGTH_SHORT).show();
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                authResult.getUser().updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(name).build());//TODO add.setPhotoUri
-                                //Intent MapsActivityIntent = new Intent(RegistrationActivity.this, MapsActivity.class);
-                                //startActivity(MapsActivityIntent);
-                                finish();
-                            }
+                else {
+                    // add new user to Firebase
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    Toast.makeText(getApplicationContext(), R.string.UserSuccesfullyAddedToast, Toast.LENGTH_SHORT).show();
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    authResult.getUser().updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(name).build());//TODO add.setPhotoUri
+                                    //Intent MapsActivityIntent = new Intent(RegistrationActivity.this, MapsActivity.class);
+                                    //startActivity(MapsActivityIntent);
+                                    finish();
+                                }
 
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
-                    }
-                });
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
 
 
             }

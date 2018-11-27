@@ -104,4 +104,9 @@ public class ChooseLoginRegistrationActivity extends AppCompatActivity {
         super.onResume();
         setUIonUser();
     }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing
+    }
 }

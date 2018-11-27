@@ -1,18 +1,23 @@
 package eu.meuwe.app.meuwealfa;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
-
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -23,35 +28,36 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Vector;
 
 import static com.google.maps.android.ui.IconGenerator.STYLE_RED;
 
 
-public class MapsActivity extends FragmentActivity
-        implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMapLongClickListener {
+public class MapsActivity extends AppCompatActivity
+        implements OnMapReadyCallback,
+        GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMapLongClickListener,
+        GoogleMap.OnCameraIdleListener {
+
+
 
     private class meuweClusterItem implements ClusterItem {
         private final LatLng mPosition;
@@ -102,9 +108,14 @@ public class MapsActivity extends FragmentActivity
         protected boolean shouldRenderAsCluster(Cluster<meuweClusterItem> cluster) {
             return cluster.getSize() >1;
         }
-    }
 
+    }
+    //UI declarations
     private GoogleMap mMap;
+    private NavigationView navigationView;
+    private Menu navigationMenu;
+    private DrawerLayout drawerLayout;
+    private AutoCompleteTextView searchTag;
 
 
     private static final int PERMISSION_ACCESS_COARSE_LOCATION =10;
@@ -114,6 +125,8 @@ public class MapsActivity extends FragmentActivity
     private Location mLastLocation;
     private LocationCallback mLocationCallback;
     private LatLng cameraPosition;
+    private HashSet <String> localTags = new HashSet<>();
+    private List <String> selectedTags = new Vector<>();
 
     //Maps Utils
     private IconGenerator iconGenerator;
@@ -127,13 +140,61 @@ public class MapsActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
 
         //Initialise screen with data from database
         firestore = FirebaseFirestore.getInstance();
         // Create a reference to the posts collection
         postsRef = firestore.collection("posts");
 
-        setContentView(R.layout.activity_maps);
+        //get UI reference
+        searchTag = findViewById(R.id.searchTag);
+        navigationView = findViewById(R.id.nav_view);
+        navigationMenu = navigationView.getMenu();
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        /** Add an adapter to the search line in side drawer
+         * to help user find proper tags
+         */
+/*
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.tagsList));
+        searchTag =findViewById(R.id.searchTagEditText);
+        searchTag.setAdapter(adapter);*/
+
+
+    /**
+     *  This is what happens when we open the navigation drawer on the left
+     *  we fill the menu list with tags of the markers available in the visible screen
+     */
+        drawerLayout.addDrawerListener(new SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+
+                navigationMenu.clear();
+                for (String tag : localTags)
+                {
+                    navigationMenu.add(tag).setCheckable(true);
+                }
+            }
+        });
+        /**
+         * This is handling of the selection of tags in the drawer menu
+         * We check the selected tag and add it to selected Tags list
+         */
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                //toggle menu item
+                if (menuItem.isChecked())menuItem.setChecked(false);
+                else menuItem.setChecked(true);
+                return false;
+            }
+        });
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -141,6 +202,7 @@ public class MapsActivity extends FragmentActivity
 
 
     }
+
 
 
     /**
@@ -187,7 +249,7 @@ public class MapsActivity extends FragmentActivity
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},PERMISSION_ACCESS_COARSE_LOCATION);
         }
 
-        UpdateLocation();
+        updateLocation();
 
 
         //Map utils
@@ -199,7 +261,7 @@ public class MapsActivity extends FragmentActivity
         clusterManager.setAnimation(true);
         clusterManager.setRenderer(new meuweClusterRenderer());
 
-        mMap.setOnCameraIdleListener(clusterManager);
+        mMap.setOnCameraIdleListener(this);
         mMap.setOnMarkerClickListener(clusterManager);
         clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<meuweClusterItem>() {
             @Override
@@ -213,7 +275,6 @@ public class MapsActivity extends FragmentActivity
         });
 
     }
-
 
 
 
@@ -231,7 +292,7 @@ public class MapsActivity extends FragmentActivity
      * Handle update of FusedLocationProviderClient and move camera to user location
      */
 
-    private void UpdateLocation()
+    private void updateLocation()
     {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -242,7 +303,7 @@ public class MapsActivity extends FragmentActivity
                         mLastLocation = location;
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                 new LatLng(mLastLocation.getLatitude(),
-                                mLastLocation.getLongitude()), DEFAULT_ZOOM));
+                                        mLastLocation.getLongitude()), DEFAULT_ZOOM));
                         // Look for all posts nearby and add a marker
                         refreshMarkers();
                     }
@@ -280,6 +341,7 @@ public class MapsActivity extends FragmentActivity
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 localPosts = queryDocumentSnapshots.toObjects(Post.class);
+
                 //put a marker for each local post in range
                 clusterManager.clearItems();
                 for(Post onePost:localPosts)
@@ -292,8 +354,11 @@ public class MapsActivity extends FragmentActivity
                                 //Generate Marker Icon on the go with title
                                 .icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon(onePost.getTitle()))))
                                 .setTag(onePost.getUuid());*/
-                           meuweClusterItem item = new meuweClusterItem(markerPosition,onePost.getTitle(),onePost.getUuid());
-                           clusterManager.addItem(item);
+                        meuweClusterItem item = new meuweClusterItem(markerPosition,onePost.getTitle(),onePost.getUuid());
+                        clusterManager.addItem(item);
+                        //add post tags to hash set
+                        //hashset removes duplicates
+                        localTags.addAll(onePost.getTags());
                     }
                 }
                 clusterManager.cluster();
@@ -309,26 +374,39 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public boolean onMyLocationButtonClick() {
-       UpdateLocation();
-       refreshMarkers();
+        updateLocation();
+        refreshMarkers();
         return false;
     }
 
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //super.onBackPressed();
         Intent intent = new Intent(MapsActivity.this, ChooseLoginRegistrationActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        UpdateLocation();
+        updateLocation();
         Intent mMeuweActivity = new Intent(MapsActivity.this, MeuweActivity.class);
         mMeuweActivity.putExtra("Latitude",latLng.latitude);
         mMeuweActivity.putExtra("Longitude",latLng.longitude);
         startActivity(mMeuweActivity);
     }
+
+    /**
+     *
+     */
+
+    @Override
+    public void onCameraIdle() {
+        refreshMarkers();
+        clusterManager.onCameraIdle();
+    }
+
+
 
 }

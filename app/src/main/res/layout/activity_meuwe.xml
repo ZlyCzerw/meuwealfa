@@ -17,14 +17,14 @@
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <Button
         android:id="@+id/post"
-        android:layout_width="384dp"
-        android:layout_height="57dp"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
         android:background="@color/common_google_signin_btn_text_dark_disabled"
         android:elevation="5dp"
         android:onClick="sendMessage"
@@ -39,24 +39,38 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/TitleText"
-        android:maxLength="15"
+        android:inputType="textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine"
+        android:maxLength="30"
         android:singleLine="true"
-        android:textAlignment="viewStart"
+        android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageTaken" />
+        app:layout_constraintRight_toRightOf="@id/guidelineVertical"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/tagsList"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/tagsListText"
+        android:textAlignment="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/guidelineVertical"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
 
     <EditText
         android:id="@+id/nameText"
-        android:layout_width="384dp"
+        style="@style/Widget.AppCompat.EditText"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:cursorVisible="true"
         android:hint="@string/Enter_text_box"
-        android:inputType="textLongMessage"
+        android:inputType="textCapWords|textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textLongMessage"
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/post"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/guidelineHorizontal" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guidelineHorizontal"
@@ -64,5 +78,35 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.3" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/loadingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fui_progress_dialog_loading"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/progressBar"
+        app:layout_constraintLeft_toLeftOf="@+id/progressBar"
+        app:layout_constraintRight_toRightOf="@+id/progressBar" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6" />
 
 </android.support.constraint.ConstraintLayout>

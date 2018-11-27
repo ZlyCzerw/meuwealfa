@@ -33,14 +33,15 @@ public class Post {
         this.tags = new Vector<>();
         this.viewsCounter =0;
     }
-    public Post(String uuid,String user, double latitude, double longitude, String text, String imageUrl,String title) {
+    public Post(String uuid,String user, double latitude, double longitude, String text, String imageUrl,String title,List <String> tags) {
         this(uuid,user,latitude,longitude,text,imageUrl);
-        this.title = title;
-        this.tags = new Vector<>();
+        if(title.isEmpty())this.title = text.substring(0,Math.min(text.length(),20))+"...";
+        else this.title = title;
+        this.tags = tags;
    }
 
     public Post() {
-        this("","none",0,0,"","","");
+        this("","none",0,0,"","");
     }
 
     public String getUser() {
@@ -135,5 +136,13 @@ public class Post {
     }
     public void incrementViewsCounter(){
         viewsCounter++;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 }

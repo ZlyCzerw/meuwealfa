@@ -82,6 +82,7 @@ public class DisplayMeuweActivity extends AppCompatActivity {
 
     }
 
+    private Bitmap bitmap;
     private void RefreshPost()
     {
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -95,33 +96,25 @@ public class DisplayMeuweActivity extends AppCompatActivity {
                 {
                     mPost = documentSnapshot.toObject(Post.class);
                     //get image from firebase
-                    StorageReference mStorageReference = firebaseStorage.getReference()
-                            .child(mPost.getImageUrl());
-                    mStorageReference.getBytes(1024 * 1024)
-                    .addOnCompleteListener(new OnCompleteListener<byte[]>() {
-                        @Override
-                        public void onComplete(@NonNull Task<byte[]> task) {
-                            Bitmap bitmap;
-                            if (task.isSuccessful())
-                            {
-                                bitmap = BitmapFactory.decodeByteArray(task.getResult(), 0, task.getResult().length);
-                            }else{
-                                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logosplashred);
-                            }
-                                try {
-                                FileOutputStream outputStream = new FileOutputStream(new File(getCacheDir(),getString(R.string.postbitmapCache)));
-                                bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
-                                } catch (IOException e)
-                                {
-                                    Toast.makeText(DisplayMeuweActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            mPost.incrementViewsCounter();
-                            //attach recycleview adapter
-                            adapter = new MessageAdapter(mPost, firebaseUser.getEmail());
-                            recyclerView.setAdapter(adapter);
-                        }
-                    });
+                    if (!mPost.getImageUrl().isEmpty())
+                    {
+                        StorageReference mStorageReference = firebaseStorage.getReference()
+                                .child(mPost.getImageUrl());
+                        mStorageReference.getBytes(1024 * 1024)
+                                .addOnCompleteListener(new OnCompleteListener<byte[]>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<byte[]> task) {
+                                        if (task.isSuccessful()) {
+                                            bitmap = BitmapFactory.decodeByteArray(task.getResult(), 0, task.getResult().length);
+                                            AttachRecyclerViewAdapter();
+                                        }
 
+                                    }
+                                });
+                    }else {
+                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logosplashred);
+                        AttachRecyclerViewAdapter();
+                    }
 
                 }
             }
@@ -131,6 +124,20 @@ public class DisplayMeuweActivity extends AppCompatActivity {
                 Toast.makeText(DisplayMeuweActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void AttachRecyclerViewAdapter()
+    {
+        try {
+            FileOutputStream outputStream = new FileOutputStream(new File(getCacheDir(), getString(R.string.postbitmapCache)));
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        } catch (IOException e) {
+            Toast.makeText(DisplayMeuweActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
+        mPost.incrementViewsCounter();
+        //attach recycleview adapter
+        adapter = new MessageAdapter(mPost, firebaseUser.getEmail());
+        recyclerView.setAdapter(adapter);
     }
 
     private void RefreshMessages () {
@@ -146,6 +153,7 @@ public class DisplayMeuweActivity extends AppCompatActivity {
                     Post post = documentSnapshot.toObject(Post.class);
                     if (!post.getMessages().isEmpty()) {
                         adapter.notifyDataSetChanged();
+                        recyclerView.scrollToPosition(post.getMessages().size()); //go to the bottom of messages
                         messageText.setText("");
                     }
                 }
@@ -176,7 +184,23 @@ public class DisplayMeuweActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
-        finishActivity(1);
+        finish();
+    }
+
+    /**
+     * If user is the owner of event, then we open activity to edit.
+     * @param view
+     */
+    public void onHeaderClick (View view)
+    {
+        if(mPost.getUser()==firebaseUser.getUid())
+        {
+            Intent MeuweActivity = new Intent (this, eu.meuwe.app.meuwealfa.MeuweActivity.class);
+            MeuweActivity.putExtra("EventUUID",EventUUID);
+            startActivity(MeuweActivity);
+            finish();
+        }
+
     }
 
 }
