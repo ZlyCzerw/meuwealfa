@@ -139,6 +139,9 @@
     <string name="SearchHereButtonMapText">Search Here!</string>
     <string name="SearchTagHint">Search Tag</string>
     <string name="tagsListText">Tags List</string>
+    <string name="EditText">Edit...</string>
+    <string name="text_message_body">%s\n%s\n#%s</string>
+    <string name="tags_split_regex_formula">\\s*,\\s*|\\s*;\\s*|\\s*#\\s*</string>
     <item name="PasswordsDontMatchError" type="id">Passwords don't match!</item>
     <string-array name="tagsList">
         <item>SPORT</item>

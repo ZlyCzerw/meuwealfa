@@ -1,8 +1,7 @@
 package eu.meuwe.app.meuwealfa;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
@@ -33,10 +32,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
     Post post;
     List<Message> Messages;
     private String localuser;
-    private Bitmap mBitmap;
+    private BitmapDrawable eventImageDrawable;
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        public TextView text_message_name,text_message_body,text_message_time,number_of_views,number_of_responses;
+        public TextView text_message_name,text_message_body,text_message_time,number_of_views,number_of_responses,author,edit;
         public ImageView image_message_profile;
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -46,6 +45,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
             image_message_profile = itemView.findViewById(R.id.image_message_profile);
             number_of_views = itemView.findViewById(R.id.number_of_views);
             number_of_responses = itemView.findViewById(R.id.number_of_responses);
+            author = itemView.findViewById(R.id.author);
+            edit = itemView.findViewById(R.id.edit);
         }
     }
 
@@ -77,29 +78,47 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
         return new MyViewHolder(itemView);
     }
 
+    /** Definition of how the recycler view looks like
+     * position 0 - header with event description, date, user, etc
+     * position 1+ - chat
+     * @param holder instance of view of created position
+     * @param position this is what is filled at this moment
+     */
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         if(position ==0) {//this is header
-            holder.text_message_body.setText(post.getText());
-            if(!post.getImageUrl().isEmpty())
+            //fill forum body
+            String tmp = holder.text_message_body.getContext()
+                    .getString(R.string.text_message_body,
+                            post.getTitle(),
+                            post.getText(),
+                            android.text.TextUtils.join(" #",post.getTags()));
+            holder.text_message_body.setText(tmp);
+            if(post.getImageUrl()!=null&&!post.getImageUrl().isEmpty())
             {
                 //Get post image from cache
                 String filename = holder.image_message_profile.getResources().getString(R.string.postbitmapCache);
                 File cacheDir = holder.image_message_profile.getContext().getCacheDir();
                 String path = cacheDir.getPath()+"/"+filename;
-                mBitmap = BitmapFactory.decodeFile(path);
-                holder.image_message_profile.setImageBitmap(mBitmap);
+                eventImageDrawable = new BitmapDrawable(holder.image_message_profile.getResources(), path);
+                eventImageDrawable.setAntiAlias(true);
+                eventImageDrawable.setFilterBitmap(true);
+                holder.image_message_profile.setImageDrawable(eventImageDrawable);
             }
 
             //get localized string for number of views
-            String tmp = holder.number_of_views.getContext().getString(R.string.numberOfViews,post.getViewsCounter());
+            tmp = holder.number_of_views.getContext().getString(R.string.numberOfViews,post.getViewsCounter());
             holder.number_of_views.setText(tmp);
             //get localized string for number of responses
             tmp = holder.number_of_responses.getContext().getString(R.string.numberOfResponses,Messages.size());
             holder.number_of_responses.setText(tmp);
+            //fill author
+            holder.author.setText(post.getUser());
+            //if user is the creator of post then activate edit button
+            if(post.getUser().compareToIgnoreCase(localuser)==0) holder.edit.setVisibility(View.VISIBLE);
 
         }
-        else {
+        else {//this is chat message
                 int messageNumber = position -1;
                 holder.text_message_body.setText(Messages.get(messageNumber).getText());
                 holder.text_message_name.setText(Messages.get(messageNumber).getUser());

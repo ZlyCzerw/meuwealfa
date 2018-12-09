@@ -96,7 +96,7 @@ public class DisplayMeuweActivity extends AppCompatActivity {
                 {
                     mPost = documentSnapshot.toObject(Post.class);
                     //get image from firebase
-                    if (!mPost.getImageUrl().isEmpty())
+                    if (mPost.getImageUrl()!=null&& !mPost.getImageUrl().isEmpty())
                     {
                         StorageReference mStorageReference = firebaseStorage.getReference()
                                 .child(mPost.getImageUrl());
@@ -136,7 +136,7 @@ public class DisplayMeuweActivity extends AppCompatActivity {
         }
         mPost.incrementViewsCounter();
         //attach recycleview adapter
-        adapter = new MessageAdapter(mPost, firebaseUser.getEmail());
+        adapter = new MessageAdapter(mPost, firebaseUser.getUid());
         recyclerView.setAdapter(adapter);
     }
 
@@ -193,7 +193,7 @@ public class DisplayMeuweActivity extends AppCompatActivity {
      */
     public void onHeaderClick (View view)
     {
-        if(mPost.getUser()==firebaseUser.getUid())
+        if(mPost.getUser().compareToIgnoreCase(firebaseUser.getUid())==0)
         {
             Intent MeuweActivity = new Intent (this, eu.meuwe.app.meuwealfa.MeuweActivity.class);
             MeuweActivity.putExtra("EventUUID",EventUUID);

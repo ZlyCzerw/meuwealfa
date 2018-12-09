@@ -43,7 +43,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,7 +119,9 @@ public class MeuweActivity extends AppCompatActivity {
         if(EventUUID != null) {
             isEdit = true;
             RefreshPost(); //get data from database
-
+        }else
+        {
+            EventUUID = UUID.randomUUID().toString(); // generate unique ID for image
         }
 
     }
@@ -139,7 +143,7 @@ public class MeuweActivity extends AppCompatActivity {
                 {
                     mPost = documentSnapshot.toObject(Post.class);
                     //get image from firebase
-                    if (!mPost.getImageUrl().isEmpty())
+                    if (mPost.getImageUrl()!=null&&!mPost.getImageUrl().isEmpty())
                     {
                         StorageReference mStorageReference = firebaseStorage.getReference()
                                 .child(mPost.getImageUrl());
@@ -157,7 +161,7 @@ public class MeuweActivity extends AppCompatActivity {
                     }
                     //fill the fields
                     mTitle.setText(mPost.getTitle());
-                    tagsList.setText(mPost.getTags().toString());
+                    tagsList.setText(android.text.TextUtils.join(", ",mPost.getTags()));
                     nameText.setText(mPost.getText());
                     Latitude = mPost.getLatitude();
                     Longitude = mPost.getLongitude();
@@ -181,7 +185,7 @@ public class MeuweActivity extends AppCompatActivity {
 
         //Add all the data to firestore
         mStorageReference = firebaseStorage.getReference();
-        if(EventUUID.isEmpty())
+        if(EventUUID!=null&&EventUUID.isEmpty())
             EventUUID = UUID.randomUUID().toString(); // generate unique ID for image
         imageName = "Images/" + EventUUID + ".png";
 
@@ -231,7 +235,6 @@ public class MeuweActivity extends AppCompatActivity {
             });
         }else //user didn't upload any photo so we leave image path empty. Be sure to check it in Display Meuwe Activity
         {
-
             CreatePost();
         }
 
@@ -244,7 +247,9 @@ public class MeuweActivity extends AppCompatActivity {
     private void CreatePost ()
     {
         //Separate tags from the string list in Tags line
-        List<String> tags = Arrays.asList(tagsList.getText().toString().split("\\s*,|;\\s*"));
+        String tmpTagsList = tagsList.getText().toString().toUpperCase().trim();
+        HashSet<String> set = new HashSet<>(Arrays.asList(tmpTagsList.split(getString(R.string.tags_split_regex_formula))));
+        List<String> tags = new ArrayList<>(set);
 
         if(mPost ==null) { //create new post
             mPost = new Post(

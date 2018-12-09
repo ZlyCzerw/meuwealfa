@@ -7,15 +7,19 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
@@ -44,6 +48,8 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
@@ -55,8 +61,7 @@ public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMapLongClickListener,
-        GoogleMap.OnCameraIdleListener {
-
+        GoogleMap.OnCameraIdleListener{
 
 
     private class meuweClusterItem implements ClusterItem {
@@ -117,7 +122,6 @@ public class MapsActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private AutoCompleteTextView searchTag;
 
-
     private static final int PERMISSION_ACCESS_COARSE_LOCATION =10;
     private static final int DEFAULT_ZOOM =15;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -126,7 +130,8 @@ public class MapsActivity extends AppCompatActivity
     private LocationCallback mLocationCallback;
     private LatLng cameraPosition;
     private HashSet <String> localTags = new HashSet<>();
-    private List <String> selectedTags = new Vector<>();
+    private HashSet <String> filterTags = new HashSet<>();
+    private LatLngBounds cameraBounds;
 
     //Maps Utils
     private IconGenerator iconGenerator;
@@ -147,20 +152,13 @@ public class MapsActivity extends AppCompatActivity
         // Create a reference to the posts collection
         postsRef = firestore.collection("posts");
 
+
+
         //get UI reference
-        searchTag = findViewById(R.id.searchTag);
         navigationView = findViewById(R.id.nav_view);
         navigationMenu = navigationView.getMenu();
+        navigationMenu.setGroupCheckable(R.id.tag_group,true,false);
         drawerLayout = findViewById(R.id.drawer_layout);
-
-        /** Add an adapter to the search line in side drawer
-         * to help user find proper tags
-         */
-/*
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.tagsList));
-        searchTag =findViewById(R.id.searchTagEditText);
-        searchTag.setAdapter(adapter);*/
 
 
     /**
@@ -171,27 +169,72 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-
                 navigationMenu.clear();
                 for (String tag : localTags)
                 {
-                    navigationMenu.add(tag).setCheckable(true);
+                    navigationMenu.add(tag).setChecked(filterTags.contains(tag));
                 }
+                /** Add an adapter to the search line in side drawer
+                 * to help user find proper tags
+                 */
+                List <String> tagsList = new ArrayList<>(localTags); //ArrayAdapter doesn't accept hashset
+        /*ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.tagsList));*/
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
+                        android.R.layout.simple_dropdown_item_1line, tagsList);
+                searchTag = findViewById(R.id.searchTag);
+                searchTag.setAdapter(adapter);
+
+                searchTag.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        //Refresh navigationMenu list with only the ones that contain CharSequence s
+                        navigationMenu.clear();
+                        for (String tag : localTags)
+                        {
+                            if(tag.contains(s.toString().toUpperCase()))//all the tags must be in Upper Case!
+                                navigationMenu.add(tag).setChecked(filterTags.contains(tag));
+                        }
+                    }
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
+
             }
-        });
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                refreshMarkers();
+            }
+        }
+        );
+
         /**
-         * This is handling of the selection of tags in the drawer menu
+         * Handling of the selection of tags in the drawer menu
          * We check the selected tag and add it to selected Tags list
          */
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                //toggle menu item
-                if (menuItem.isChecked())menuItem.setChecked(false);
-                else menuItem.setChecked(true);
-                return false;
-            }
+                    //toggle menu item
+                    if(menuItem.isChecked())
+                    {
+                        menuItem.setChecked(false);
+                        filterTags.remove(menuItem.getTitle().toString());
+
+                    }
+                    else
+                    {
+                        menuItem.setChecked(true);
+                        filterTags.add(menuItem.getTitle().toString());
+                    }
+
+                    return true;
+                }
         });
 
 
@@ -201,7 +244,9 @@ public class MapsActivity extends AppCompatActivity
         mapFragment.getMapAsync(this);
 
 
+
     }
+
 
 
 
@@ -276,7 +321,12 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
-
+    /**
+     *  Handle what happens when user agrees on the required permissions
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -314,12 +364,12 @@ public class MapsActivity extends AppCompatActivity
         }
     }
 
-    /** Refresh markers in the visible map
+    /** Refresh markers in the visible part of map
      *
      */
     private void refreshMarkers() {
         cameraPosition = mMap.getCameraPosition().target;
-        final LatLngBounds cameraBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+        cameraBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
 
         //find all markers within range
         if(cameraBounds.southwest.longitude <= cameraBounds.northeast.longitude) {
@@ -344,11 +394,14 @@ public class MapsActivity extends AppCompatActivity
 
                 //put a marker for each local post in range
                 clusterManager.clearItems();
+                filterTags = getCheckedMenuItems(navigationMenu);
                 for(Post onePost:localPosts)
                 {
                     LatLng markerPosition = new LatLng(onePost.getLatitude(), onePost.getLongitude());
-                    if (cameraBounds.contains(markerPosition))//TODO this is workaround, but is done on application side, not server. It may cause problems with a lot of markers
+                    if (cameraBounds.contains(markerPosition)//TODO this is workaround, but is done on application side, not server. It may cause problems with a lot of markers
+                            && onePost.getTags().containsAll(filterTags))
                     {//TODO add marker filtering on tag list
+
                            /*mMap.addMarker(new MarkerOptions()
                                 .position(markerPosition)
                                 //Generate Marker Icon on the go with title
@@ -369,6 +422,7 @@ public class MapsActivity extends AppCompatActivity
                 Toast.makeText(MapsActivity.this,e.getLocalizedMessage().toString(),Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
 
@@ -405,6 +459,22 @@ public class MapsActivity extends AppCompatActivity
     public void onCameraIdle() {
         refreshMarkers();
         clusterManager.onCameraIdle();
+    }
+
+    /** Retrieve HashSet of checked items from Menu
+     *
+     * @param menu  object to scan for items
+     * @return Hashset of Strings with all the checked items
+     */
+    private HashSet <String> getCheckedMenuItems(Menu menu)
+    {
+        HashSet <String> filterTags = new HashSet<>();
+        for(int i=0;i<menu.size();i++)
+        {
+            if(menu.getItem(i).isChecked())
+                filterTags.add(menu.getItem(i).getTitle().toString());
+        }
+        return filterTags;
     }
 
 

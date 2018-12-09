@@ -16,9 +16,9 @@
         android:layout_height="wrap_content"
         android:cropToPadding="false"
         android:onClick="sendMessage"
-        app:srcCompat="@android:drawable/ic_menu_send"
         app:layout_constraintBottom_toBottomOf="@+id/messageText"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_send" />
 
     <EditText
         android:id="@+id/messageText"
