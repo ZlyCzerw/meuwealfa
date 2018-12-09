@@ -3,7 +3,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="Photo_Description">now, write a short description</string>
     <string name="Description">tap to write description of an event...</string>
-    <string name="button_post">post it!</string>
+    <string name="button_post">POST IT!</string>
     <string name="title_activity_display_message">DisplayMessageActivity</string>
 
     <string name="action_settings">Settings</string>
@@ -100,7 +100,7 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-    <string name="Enter_text_box">here you write about activity you want to share</string>
+    <string name="Enter_text_box">Here write about your activity!</string>
     <string name="goback_button">back to map</string>
     <string name="Comment_bar_fake">56 views,           7 comments</string>
     <string name="Button_Publish">Publish!</string>
@@ -113,4 +113,40 @@
     <string name="czat7">NewUser987: siema! mogę czekać pod Twoim blokiem o 17 ;)</string>
     <string name="CameraWindow">camera</string>
     <string name="Take_Fake_Photo">-</string>
+    <string name="AddPhotoHint">Tap to add photo</string>
+    <string name="ErrNoAppToMakePhotos">No App to make Photos</string>
+    <string name="EventImageDesc">Event Image</string>
+    <string name="LoginText">Login</string>
+    <string name="showMapText">Show Map</string>
+    <string name="myPostsText">My Posts</string>
+    <string name="logoutText">Logout</string>
+    <string name="ProfileTabText">Profile</string>
+    <string name="PostsTabText">Posts</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="NameHint">Name</string>
+    <string name="emailText">E-mail</string>
+    <string name="passwordText">Password</string>
+    <string name="ConfimtPasswordHint">Confirm Password</string>
+    <string name="PasswordsDontMatchError">Passwords don\'t match!</string>
+    <string name="FieldsCannotBeEmptyError">Fields cannot be empty!</string>
+    <string name="UserSuccesfullyAddedToast">User successfully added!</string>
+    <string name="numberOfViews">%d views</string>
+    <string name="numberOfResponses">%d responses</string>
+    <string name="TitleText">Title</string>
+    <string name="postbitmapCache">postbitmapCache.png</string>
+    <string name="SearchHereButtonMapText">Search Here!</string>
+    <string name="SearchTagHint">Search Tag</string>
+    <string name="tagsListText">Tags List</string>
+    <string name="EditText">Edit...</string>
+    <string name="text_message_body">%s\n%s\n#%s</string>
+    <string name="tags_split_regex_formula">\\s*,\\s*|\\s*;\\s*|\\s*#\\s*</string>
+    <item name="PasswordsDontMatchError" type="id">Passwords don't match!</item>
+    <string-array name="tagsList">
+        <item>SPORT</item>
+        <item>WORK</item>
+        <item>OUTDOORS</item>
+        <item>SEX</item>
+    </string-array>
 </resources>

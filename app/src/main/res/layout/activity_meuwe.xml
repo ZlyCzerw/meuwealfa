@@ -5,50 +5,108 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="eu.meuwe.app.meuwealfa.MeuweActivity">
+    tools:context="eu.meuwe.app.meuwealfa.MeuweActivity"
+    tools:layout_editor_absoluteY="25dp">
+
     <ImageView
         android:id="@+id/imageTaken"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:layout_marginBottom="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:contentDescription="@string/Photo_Description"
+        android:onClick="onClickImageTaken"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <Button
         android:id="@+id/post"
         android:layout_width="0dp"
-        android:layout_height="107dp"
+        android:layout_height="40dp"
         android:background="@color/common_google_signin_btn_text_dark_disabled"
+        android:elevation="5dp"
         android:onClick="sendMessage"
-        android:hint="post it"
+        android:text="@string/button_post"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameText" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/TitleText"
+        android:inputType="textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine"
+        android:maxLength="30"
+        android:singleLine="true"
+        android:textAlignment="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/guidelineVertical"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/tagsList"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/tagsListText"
+        android:textAlignment="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/guidelineVertical"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+
+    <EditText
+        android:id="@+id/nameText"
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="0dp"
-        android:layout_height="109dp"
-        android:background="@color/common_google_signin_btn_text_dark_disabled"
-        android:ems="10"
-        android:fontFamily="sans-serif"
+        android:layout_height="0dp"
+        android:cursorVisible="true"
         android:hint="@string/Enter_text_box"
-        android:inputType="textMultiLine"
-        android:textAlignment="viewStart"
-        android:textColor="@android:color/background_light"
-        android:visibility="visible"
+        android:inputType="textCapWords|textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textLongMessage"
+        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/post"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="@string/Description" />
+        app:layout_constraintTop_toBottomOf="@+id/guidelineHorizontal" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/loadingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fui_progress_dialog_loading"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/progressBar"
+        app:layout_constraintLeft_toLeftOf="@+id/progressBar"
+        app:layout_constraintRight_toRightOf="@+id/progressBar" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6" />
 
 </android.support.constraint.ConstraintLayout>

@@ -8,7 +8,6 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -18,11 +17,8 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="true"
-        />
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        />
+        android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -49,13 +45,12 @@
 
         <activity
             android:name=".MeuweActivity"
-            android:parentActivityName=".MapsActivity" />
+            android:parentActivityName=".MeuweActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DisplayMueweActivity"
-            android:parentActivityName=".MapsActivity" />
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:name=".DisplayMeuweActivity"
+            android:parentActivityName=".MeuweActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,13 +58,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".CameraPreview"
-            android:parentActivityName=".MapsActivity" />
         <activity android:name=".AniaIconActivity" />
         <activity android:name=".ChooseLoginRegistrationActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegistrationActivity"></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".RegistrationActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="eu.meuwe.app.meuwealfa.ChooseLoginRegistrationActivity" />
+        </activity>
+        <activity android:name=".MyProfileActivity"></activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="eu.meuwe.app.meuwealfa.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
     </application>
 
 </manifest>
