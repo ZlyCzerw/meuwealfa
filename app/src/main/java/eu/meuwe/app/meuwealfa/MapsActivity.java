@@ -16,11 +16,13 @@ import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.EventLog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -36,6 +38,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,18 +64,51 @@ public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMapLongClickListener,
-        GoogleMap.OnCameraIdleListener{
+        GoogleMap.OnCameraIdleListener,
+        GoogleMap.InfoWindowAdapter,
+        GoogleMap.OnInfoWindowClickListener {
 
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
+    }
+
+    /**
+     * Inflation of info window of each marker, when you press it.
+     * It displays marker_info_content layout.
+     * @param marker handle of marker item.
+     * @return
+     */
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        View infoContent;
+        infoContent = getLayoutInflater().inflate(R.layout.marker_info_content,null);
+        TextView eventDescription = infoContent.findViewById(R.id.Event_Description_Text);
+        eventDescription.setText(clickedClusterItem.getDescription());
+        return infoContent;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //get UUID out of marker tag
+        Intent intent = new Intent(MapsActivity.this, DisplayMeuweActivity.class);
+        intent.putExtra("EventUUID", clickedClusterItem.getTag());
+        startActivity(intent);
+    }
 
     private class meuweClusterItem implements ClusterItem {
         private final LatLng mPosition;
         private final String mTitle;
         private final String mTag;
+        private final String mDescription;
 
-        public meuweClusterItem(LatLng position, String title, String tag) {
+        public meuweClusterItem(LatLng position, String title, String tag, String description) {
             this.mPosition = position;
             this.mTitle = title;
             this.mTag = tag;
+            this.mDescription = description;
         }
 
 
@@ -91,6 +127,8 @@ public class MapsActivity extends AppCompatActivity
         public String getTag() {
             return mTag;
         }
+
+        public String getDescription() {return mDescription;}
     }
 
     private class meuweClusterRenderer extends DefaultClusterRenderer<meuweClusterItem>{
@@ -136,6 +174,7 @@ public class MapsActivity extends AppCompatActivity
     //Maps Utils
     private IconGenerator iconGenerator;
     private ClusterManager<meuweClusterItem> clusterManager;
+    private meuweClusterItem clickedClusterItem;
 
     //Firebase variables
     private FirebaseFirestore firestore;
@@ -250,6 +289,8 @@ public class MapsActivity extends AppCompatActivity
 
 
 
+
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -311,10 +352,8 @@ public class MapsActivity extends AppCompatActivity
         clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<meuweClusterItem>() {
             @Override
             public boolean onClusterItemClick(meuweClusterItem meuweClusterItem) {
-                //get UUID out of marker tag
-                Intent intent = new Intent(MapsActivity.this, DisplayMeuweActivity.class);
-                intent.putExtra("EventUUID", meuweClusterItem.getTag());
-                startActivity(intent);
+                //get the marker that is clicked
+                clickedClusterItem = meuweClusterItem;
                 return true;
             }
         });
@@ -400,14 +439,13 @@ public class MapsActivity extends AppCompatActivity
                     LatLng markerPosition = new LatLng(onePost.getLatitude(), onePost.getLongitude());
                     if (cameraBounds.contains(markerPosition)//TODO this is workaround, but is done on application side, not server. It may cause problems with a lot of markers
                             && onePost.getTags().containsAll(filterTags))
-                    {//TODO add marker filtering on tag list
-
-                           /*mMap.addMarker(new MarkerOptions()
+                    {
+                        /*mMap.addMarker(new MarkerOptions()
                                 .position(markerPosition)
                                 //Generate Marker Icon on the go with title
                                 .icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon(onePost.getTitle()))))
                                 .setTag(onePost.getUuid());*/
-                        meuweClusterItem item = new meuweClusterItem(markerPosition,onePost.getTitle(),onePost.getUuid());
+                        meuweClusterItem item = new meuweClusterItem(markerPosition,onePost.getTitle(),onePost.getUuid(),onePost.getText());
                         clusterManager.addItem(item);
                         //add post tags to hash set
                         //hashset removes duplicates

@@ -151,7 +151,7 @@ public class DisplayMeuweActivity extends AppCompatActivity {
                 } else //fill window
                 {
                     Post post = documentSnapshot.toObject(Post.class);
-                    if (!post.getMessages().isEmpty()) {
+                    if (post!=null && !post.getMessages().isEmpty()) {
                         adapter.notifyDataSetChanged();
                         recyclerView.scrollToPosition(post.getMessages().size()); //go to the bottom of messages
                         messageText.setText("");
